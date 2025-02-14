@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        "__pycache__": true,
+        ".python-version": true,
+        ".ruff_cache": true,
+        ".vscode": true,
+        "**/.venv": true,
+        "uv.lock": true
+    }
+}
