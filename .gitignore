@@ -2,3 +2,5 @@ uv.lock
 .venv
 **/__pycache__
 .ruff_cache
+.idea
+start.bat

@@ -1,0 +1,268 @@
+{% extends "real_base.html" %}
+
+{%block title%}Novo!{%endblock%}
+
+{%block maincontent%}
+<h2>Навигация по сайту</h2>
+<p>Сайт использует для навигации радиальное меню. Чтобы вызвать меню, нажмите правую кнопку мыши на ПК, или используйте
+    долгий тап на смартфоне, и выберите интересующую Вас страницу
+<img src="{{ url_for('static', path='img_nav.png') }}">
+</p>
+<h2>Вход в учётную запись</h2>
+<!--{%if session['username']%} {{ session['username'] }} {% else %} <a href="login">Страница входа</a>  {% endif %}-->
+
+
+{%endblock%}
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Radial Menu</title>-->
+<!--    <style>-->
+<!--        .pie {-->
+<!--          width: 300px;-->
+<!--          background: white;-->
+<!--          border-radius: 50%;-->
+<!--        }-->
+
+<!--        .pie circle {-->
+<!--          fill: none;-->
+<!--          stroke: pink;-->
+<!--          stroke-width: 32;-->
+<!--          animation: rotate 1.5s ease-in;-->
+<!--        }-->
+
+<!--        @keyframes rotate {-->
+<!--          to {-->
+<!--            x-->
+<!--          }-->
+<!--        }-->
+
+<!--        body {-->
+<!--            margin: 0;-->
+<!--            overflow: hidden;-->
+<!--            cursor: none;-->
+<!--        }-->
+
+<!--        .cursor {-->
+<!--            position: absolute;-->
+<!--            width: 20px;-->
+<!--            height: 20px;-->
+<!--            background-color: red;-->
+<!--            border-radius: 50%;-->
+<!--        }-->
+
+<!--        .radial-menu {-->
+<!--            position: absolute;-->
+<!--            display: none;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--        }-->
+
+<!--        .radial-menu button {-->
+<!--          cursor: pointer;-->
+<!--          position: absolute;-->
+<!--          background-color: #f3f4f6;-->
+<!--          color: #333;-->
+<!--          border: 1px solid transparent;-->
+<!--          border-radius: 5px;-->
+<!--          padding: 10px 20px;-->
+<!--          font-size: 16px;-->
+<!--          text-align: center;-->
+<!--          text-decoration: none;-->
+<!--          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);-->
+<!--          z-index: 1;-->
+<!--          transition: background-color 0.3s, color 0.3s;-->
+<!--        }-->
+
+<!--        .radial-menu button:hover {-->
+<!--          background-color: #e0e0e0;-->
+<!--          color: #222;-->
+<!--          z-index: 3;-->
+<!--        }-->
+
+<!--        @keyframes blink {-->
+<!--          0% { opacity: 1; }-->
+<!--          50% { opacity: 0.2; }-->
+<!--          100% { opacity: 1; }-->
+<!--        }-->
+<!--        .hint {-->
+<!--            position: absolute;-->
+<!--            color: #ffffff;-->
+<!--            background-color: rgba(0, 0, 0, 0.6);-->
+<!--            padding: 5px;-->
+<!--            border-radius: 5px;-->
+<!--            pointer-events: none; /* Disables pointer events on the hint element */-->
+<!--            animation: blink 3s infinite;-->
+<!--        }-->
+
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="cursor"></div>-->
+
+<!--<div class="radial-menu">-->
+<!--    <svg viewBox="0 0 64 64" class="pie">-->
+<!--      <circle id="thepie" r="25%" cx="50%" cy="50%" style="stroke-dasharray: 25 100; stroke-dashoffset: -50">-->
+<!--      </circle>-->
+<!--&lt;!&ndash;      <circle r="25%" cx="50%" cy="50%" style="stroke-dasharray: 19.9 100; stroke: green; stroke-dashoffset: -75.3; animation-delay: 0.25s">&ndash;&gt;-->
+<!--&lt;!&ndash;      </circle>&ndash;&gt;-->
+<!--&lt;!&ndash;      <circle r="25%" cx="50%" cy="50%" style="stroke-dasharray: 2.3 100; stroke: blue; stroke-dashoffset: -95.2; animation-delay: 0.5s">&ndash;&gt;-->
+<!--&lt;!&ndash;      </circle>&ndash;&gt;-->
+<!--&lt;!&ndash;      <circle r="25%" cx="50%" cy="50%" style="stroke-dasharray: 1.4 100; stroke: orange; stroke-dashoffset: -97.5; animation-delay: 0.75s">&ndash;&gt;-->
+<!--&lt;!&ndash;      </circle>&ndash;&gt;-->
+<!--&lt;!&ndash;      <circle r="25%" cx="50%" cy="50%" style="stroke-dasharray: 1.1 100; stroke: red; stroke-dashoffset: -98.9; animation-delay: 1s">&ndash;&gt;-->
+<!--&lt;!&ndash;      </circle>&ndash;&gt;-->
+<!--    </svg>-->
+<!--    <div class="radial-menu-layer">-->
+<!--        <button>Прореживание</button>-->
+<!--        <button>Button 2</button>-->
+<!--        <button>Button 3</button>-->
+<!--        <button>Button 3</button>-->
+<!--        <button>Button 5</button>-->
+<!--        <button>Button 6</button>-->
+<!--    </div>-->
+<!--        <div class="radial-menu-layer">-->
+<!--        <button>Button 1</button>-->
+<!--        <button>Button 2</button>-->
+<!--        <button>Button 3</button>-->
+<!--        <button>Button 5</button>-->
+<!--        <button>Button 5</button>-->
+<!--        <button>Button 6</button>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<div class="hint">ПКМ</div>-->
+<!--<script>-->
+<!--class MyMenu {-->
+<!--    constructor() {-->
+<!--        this.cursor = document.querySelector('.cursor');-->
+<!--        this.radialMenu = document.querySelector('.radial-menu');-->
+<!--        this.layers = document.querySelectorAll('.radial-menu-layer');-->
+<!--        this.hint = document.querySelector('.hint');-->
+<!--        this.isCursorLocked = false;-->
+<!--        this.pie = document.querySelector('.radial-menu circle');-->
+<!--        this.svg = document.querySelector('.radial-menu svg');-->
+<!--        this.lazy = true;-->
+<!--        this.pie.style.strokeDashoffset = `0`;-->
+<!--        this.pie.style.strokeDasharray= `0 100`;-->
+
+<!--        const cursorRect = this.cursor.getBoundingClientRect();-->
+<!--        const cursorCenterX = cursorRect.left + cursorRect.width / 2;-->
+<!--        const cursorCenterY = cursorRect.top + cursorRect.height / 2;-->
+<!--        let svgElement = document.querySelector('.radial-menu svg');-->
+<!--        svgElement.setAttribute('transform', `translate(${cursorCenterX-150-8},${cursorCenterY-150 -8})`);-->
+<!--    }-->
+
+<!--    updateButtonPositions() {-->
+<!--        const cursorRect = this.cursor.getBoundingClientRect();-->
+<!--        const cursorCenterX = cursorRect.left + cursorRect.width / 2;-->
+<!--        const cursorCenterY = cursorRect.top + cursorRect.height / 2;-->
+<!--        let svgElement = document.querySelector('.radial-menu svg');-->
+<!--        svgElement.setAttribute('transform', `translate(${cursorCenterX-150-8},${cursorCenterY-150 -8})`);-->
+<!--        this.layers.forEach((layer, layer_index) => {-->
+<!--            const buttons = layer.querySelectorAll('button');-->
+<!--            var r0 = 100;-->
+<!--            var radius = (100 * (layer_index + 1));-->
+<!--            buttons.forEach((button, index) => {-->
+<!--                const delta = (2 * Math.PI / (buttons.length));-->
+<!--                console.log(buttons.length);-->
+<!--                const angle = -Math.PI/2 + ((index) / buttons.length) * Math.PI * 2;-->
+<!--                const buttonX = -r0/2 + cursorCenterX + Math.cos(angle) * radius;-->
+<!--                const buttonY = -r0/2 + cursorCenterY + Math.sin(angle) * radius;-->
+<!--                button.delta = delta;-->
+<!--                button.style.top = buttonY + 'px';-->
+<!--                button.style.left = buttonX + 'px';-->
+
+<!--                button.angle_rad = angle;-->
+<!--                button.a0 = 3*Math.PI/2;-->
+<!--                button.an = ((index) / buttons.length) * Math.PI * 2;-->
+<!--                button.radius = radius;-->
+<!--                button.x = buttonX;-->
+<!--                button.y = buttonY;-->
+
+<!--                button.addEventListener('mouseover', e=> {-->
+<!--                    let button = e.target;-->
+
+<!--                    const to_percents = (v) => v*100. / (2*Math.PI);-->
+<!--                    let pie_value_in_percents = -to_percents(button.an - button.delta/4 + button.a0)%100;-->
+<!--                    let delta_in_percents = to_percents(button.delta/2);-->
+<!--                    this.pie.style.strokeDashoffset = `${pie_value_in_percents}`;-->
+<!--                    this.pie.style.strokeDasharray= `${to_percents(button.delta/2)} 100`;-->
+<!--                    console.log(button);-->
+
+<!--                });-->
+<!--            });-->
+<!--        });-->
+<!--    }-->
+
+<!--    init() {-->
+<!--        document.addEventListener('mousemove', e => {-->
+<!--            if (!this.isCursorLocked) {-->
+<!--                this.cursor.style.top = e.pageY + 'px';-->
+<!--                this.cursor.style.left = e.pageX + 'px';-->
+
+<!--                if (this.radialMenu.style.display === 'flex') {-->
+<!--                    this.updateButtonPositions();-->
+<!--                }-->
+<!--            }-->
+<!--        });-->
+
+<!--        document.addEventListener('mousemove', e => {-->
+<!--            const cursorRect = this.cursor.getBoundingClientRect();-->
+<!--            const cursorCenterX = cursorRect.left + cursorRect.width / 2;-->
+<!--            const cursorCenterY = cursorRect.top + cursorRect.height / 2;-->
+
+<!--            this.hint.style.top = cursorCenterY + 'px';-->
+<!--            this.hint.style.left = cursorCenterX + 'px';-->
+<!--        });-->
+
+<!--        document.addEventListener('contextmenu', e => {-->
+<!--            //if (e.key === 'Control') {-->
+<!--                event.preventDefault();-->
+<!--                this.isCursorLocked = !this.isCursorLocked;-->
+<!--                let radialMenuStyle = this.radialMenu.style;-->
+<!--                let hintStyle = this.hint.style;-->
+
+<!--                function showGently(elementStyle) {-->
+<!--                    elementStyle.opacity = '0';-->
+<!--                        elementStyle.display = 'flex';-->
+<!--                        elementStyle.transition = 'opacity 0.5s';-->
+<!--                        setTimeout(() => {-->
+<!--                            elementStyle.opacity = '1';-->
+<!--                        }, 100);-->
+<!--                }-->
+
+<!--                function hideGently(elementStyle) {-->
+<!--                    elementStyle.opacity = '1';-->
+<!--                    elementStyle.transition = 'opacity 0.5s';-->
+<!--                    setTimeout(() => {-->
+<!--                        elementStyle.opacity = '0';-->
+<!--                        setTimeout(() => {-->
+<!--                            elementStyle.display = 'none';-->
+<!--                        }, 500);-->
+<!--                    }, 100);-->
+<!--                }-->
+
+<!--                if (this.isCursorLocked) {-->
+<!--                    showGently(radialMenuStyle);-->
+<!--                    hideGently(hintStyle);-->
+<!--                    this.updateButtonPositions();-->
+<!--                } else {-->
+<!--                    showGently(hintStyle);-->
+<!--                    hideGently(radialMenuStyle);-->
+<!--                }-->
+<!--            //}-->
+<!--        });-->
+
+<!--    }-->
+<!--};-->
+
+<!--const myObject = new MyMenu();-->
+<!--myObject.init();-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+

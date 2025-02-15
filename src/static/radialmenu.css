@@ -1,0 +1,100 @@
+        :root {
+        --translatePieX: 0px;
+        --translatePieY: 0px;
+      }
+
+
+      @keyframes pulse {
+        0% {
+          transform: translate(var(--translatePieX), var(--translatePieY)) scale(1);
+          opacity: 0.5;
+        }
+        100% {
+          transform: translate(calc(var(--translatePieX)), calc(var(--translatePieY))) scale(1.1);
+          opacity: 1;
+        }
+        }
+        .pie {
+          transform-origin: center; /* Ensure scaling happens from the center */
+          animation: pulse 1s infinite alternate;
+          width: 350px;
+          background: #007bff;
+          border-radius: 50%;
+          z-index: 998;
+          opacity: 50%
+        }
+        .radial-menu button .pie {
+          position: fixed;
+          z-index: 900;
+        }
+
+        .pie circle {
+          fill: none;
+          stroke: pink;
+          stroke-width: 32;
+          animation: rotate 1.5s ease-in;
+          z-index: 999;
+          opacity: 50%
+        }
+
+        /* @keyframes rotate {
+          to {
+            x;
+          }
+        } */
+
+        body {
+            margin : 0;
+            position : relative;
+            cursor : none;
+        }
+
+        .cursor {
+            pointer-events: none;
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        .radial-menu {
+            position: fixed;
+            height: 400px;
+            width: 400px;
+        }
+
+
+        .radial-menu button {
+          position: fixed;
+          cursor: pointer;
+          background-color: #f3f4f6;
+          color: #333;
+          border: 1px solid transparent;
+          border-radius: 5px;
+          padding: 10px 20px;
+          font-size: 16px;
+          text-decoration: none;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          transition: background-color 0.3s, color 0.3s;
+        }
+
+        .radial-menu button:hover {
+          background-color: #e0e0e0;
+          color: #222;
+        }
+
+        @keyframes blink {
+          0% { opacity: 1; }
+          50% { opacity: 0.2; }
+          100% { opacity: 1; }
+        }
+        .hint {
+            color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 5px;
+            border-radius: 5px;
+            pointer-events: none; /* Disables pointer events on the hint element */
+            animation: blink 3s infinite;
+            position: fixed;
+        }
