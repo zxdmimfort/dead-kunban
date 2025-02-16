@@ -1,0 +1,627 @@
+{
+    "columns": [],
+    "cards": [
+        {
+            "id": 1,
+            "title": "ASDASD",
+            "description": "ФВФВФВФВ",
+            "assignee": "",
+            "status": "archived",
+            "dueDate": "",
+            "priority": "low",
+            "createdAt": "2025-02-11T20:37:01.818Z",
+            "period": -1,
+            "history": [
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-11T20:37:01.818Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-11T20:38:23.765Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-11T20:38:25.217Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-11T22:47:58.092Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-11T22:53:46.186Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-11T22:53:49.189Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-11T22:54:42.726Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-11T22:54:43.777Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-11T22:54:47.697Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-11T22:57:12.158Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-11T22:57:16.978Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-11T22:57:19.782Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-11T22:57:23.152Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-11T22:57:24.202Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-11T22:57:25.353Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-11T22:57:26.205Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-11T22:57:26.955Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-11T22:57:27.757Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-11T22:57:35.180Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-12T22:38:13.770Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-12T22:38:15.788Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-12T22:38:16.205Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-12T22:38:17.790Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-12T22:38:24.997Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-12T22:38:27.583Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T13:47:15.895Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T13:47:17.062Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T13:47:17.930Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T13:47:18.798Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T13:47:19.599Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T13:47:20.833Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T13:47:22.735Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T13:47:24.069Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T13:47:25.921Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T13:47:27.072Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T13:47:32.597Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T13:47:34.114Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T13:47:35.182Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T13:47:36.967Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T14:16:43.347Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T14:16:44.065Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T14:21:34.703Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T14:21:35.587Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T14:21:36.438Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T14:21:37.222Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T14:43:13.006Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T14:43:14.625Z"
+                },
+                {
+                    "timestamp": "2025-02-13T14:43:15.894Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:05:08.996Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:05:21.496Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:05:22.992Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:06:01.097Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:06:02.281Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:06:03.283Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:17:53.953Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:17:55.505Z"
+                },
+                {
+                    "status": "rest",
+                    "timestamp": "2025-02-13T15:17:56.739Z"
+                },
+                {
+                    "status": "archived",
+                    "timestamp": "2025-02-13T15:18:28.571Z"
+                },
+                {
+                    "status": "rest",
+                    "timestamp": "2025-02-13T21:20:05.140Z"
+                },
+                {
+                    "status": "archived",
+                    "timestamp": "2025-02-13T21:20:16.868Z"
+                }
+            ],
+            "cooldown": "*не выполнено*",
+            "history_as_string": "02-13 21:20:05: rest",
+            "days_till_todo": -1,
+            "hours_till_todo": -1
+        },
+        {
+            "id": 1,
+            "title": "Поменять постельное бельё",
+            "description": "",
+            "assignee": "",
+            "status": "done",
+            "dueDate": "",
+            "priority": "low",
+            "createdAt": "2025-02-13T15:19:04.761Z",
+            "period": 7,
+            "history": [
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:19:04.761Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:19:15.301Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:19:17.670Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:19:18.504Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:19:19.939Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:20:22.601Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:20:24.720Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:21:06.077Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:21:08.063Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:31:11.528Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:31:57.990Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:33:43.979Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:34:18.613Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:34:34.529Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:34:36.948Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:34:43.905Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:35:47.334Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:35:49.687Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:35:51.872Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:35:56.993Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:37:33.908Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:37:35.510Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:39:34.393Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:39:35.777Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:39:38.447Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:39:39.681Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T15:39:44.853Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:39:51.893Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:40:05.057Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T16:23:31.557Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T16:23:34.010Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T16:35:34.107Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T16:35:35.359Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T19:49:06.520Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T19:49:07.621Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T21:19:42.800Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T21:42:04.463Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T21:42:10.769Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T21:42:12.704Z"
+                }
+            ],
+            "cooldown": "20-02-25 21:42:12",
+            "history_as_string": "02-13 21:42:10: inprogress",
+            "days_till_todo": 6,
+            "hours_till_todo": 167
+        },
+        {
+            "id": 1,
+            "title": "Почистить бытовую технику",
+            "description": "микроволновка, тостер, протереть полки холодильника, плита, кофеварка",
+            "assignee": "",
+            "status": "done",
+            "dueDate": "",
+            "priority": "low",
+            "createdAt": "2025-02-13T15:41:59.683Z",
+            "period": 1,
+            "history": [
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:41:59.683Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T15:42:08.328Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T15:42:15.636Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T16:17:44.547Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T16:17:45.415Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T16:51:18.159Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T16:51:24.583Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T19:44:31.764Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T19:44:32.966Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T20:54:08.264Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T20:54:27.850Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T21:16:38.535Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T21:16:41.738Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T21:41:53.469Z"
+                },
+                {
+                    "status": "done",
+                    "timestamp": "2025-02-13T21:42:56.164Z"
+                }
+            ],
+            "cooldown": "14-02-25 21:42:56",
+            "history_as_string": "02-13 21:41:53: inprogress",
+            "days_till_todo": 0,
+            "hours_till_todo": 23
+        },
+        {
+            "id": 1,
+            "title": "Убраться в ванной",
+            "description": "помыть раковины, помыть ванную, помыть пол, залить средство в толчки",
+            "assignee": "",
+            "status": "inprogress",
+            "dueDate": "",
+            "priority": "low",
+            "createdAt": "2025-02-13T16:19:31.197Z",
+            "period": 7,
+            "history": [
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T16:19:31.197Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T16:46:09.253Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T16:51:22.797Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T21:35:25.301Z"
+                }
+            ],
+            "cooldown": "*не выполнено*",
+            "history_as_string": "02-13 16:51:22: todo",
+            "days_till_todo": -1,
+            "hours_till_todo": -1
+        },
+        {
+            "id": 1,
+            "title": "Пылесосингу",
+            "description": "",
+            "assignee": "",
+            "status": "todo",
+            "dueDate": "",
+            "priority": "low",
+            "createdAt": "2025-02-13T16:38:57.529Z",
+            "period": -1,
+            "history": [
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T16:38:57.529Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T16:51:17.125Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T16:51:19.628Z"
+                }
+            ],
+            "cooldown": "*не выполнено*",
+            "history_as_string": "02-13 16:51:17: inprogress",
+            "days_till_todo": -1,
+            "hours_till_todo": -1
+        },
+        {
+            "id": 1,
+            "title": "Протереть окна",
+            "description": "",
+            "assignee": "",
+            "status": "todo",
+            "dueDate": "",
+            "priority": "low",
+            "createdAt": "2025-02-13T16:41:44.279Z",
+            "period": 90,
+            "history": [
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T16:41:44.279Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T16:51:15.440Z"
+                },
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T16:51:20.545Z"
+                }
+            ],
+            "cooldown": "*не выполнено*",
+            "history_as_string": "02-13 16:51:15: inprogress",
+            "days_till_todo": -1,
+            "hours_till_todo": -1
+        },
+        {
+            "id": 1,
+            "title": "Запустить робота-пылесоса",
+            "description": "",
+            "assignee": "",
+            "status": "inprogress",
+            "dueDate": "",
+            "priority": "normal",
+            "createdAt": "2025-02-13T16:55:15.020Z",
+            "period": 1,
+            "history": [
+                {
+                    "status": "todo",
+                    "timestamp": "2025-02-13T16:55:15.020Z"
+                },
+                {
+                    "status": "inprogress",
+                    "timestamp": "2025-02-13T17:51:21.432Z"
+                }
+            ],
+            "cooldown": "*не выполнено*",
+            "history_as_string": "02-13 16:55:15: todo",
+            "days_till_todo": -1,
+            "hours_till_todo": -1
+        }
+    ]
+}

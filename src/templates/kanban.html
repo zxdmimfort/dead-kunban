@@ -72,8 +72,8 @@
 </span>
 
 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='kanban2.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='card.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', path='kanban2.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', path='card.css') }}">
 
 
 
@@ -127,9 +127,9 @@
 
 
 
-<script src="{{ url_for('static', filename='draggable_board.js') }}" type="text/javascript"></script>
-<script src="{{ url_for('static', filename='kanban.js') }}" type="text/javascript"></script>
-<script src="{{ url_for('static', filename='card_window.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', path='draggable_board.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', path='kanban.js') }}" type="text/javascript"></script>
+<script src="{{ url_for('static', path='card_window.js') }}" type="text/javascript"></script>
 
 
 {%endblock%}

@@ -1,0 +1,93 @@
+/* General Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .kanban-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      touch-action: none; /* For smooth dragging */
+    }
+
+    .kanban-board {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: top left;
+      transition: transform 0.1s ease-out;
+      display: flex;  /*  This is crucial */
+      flex-direction: row; /* Explicitly set the direction */
+      width:100%
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 20px;
+      min-width: 300px;
+      background-color: #f4f4f4;
+      border-right: 1px solid #ddd;
+    }
+
+
+    .card {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      min-height: 50px;
+      word-wrap: break-word;
+      resize: vertical;
+      overflow-y: auto;
+      cursor: pointer; /* Pointer cursor for clickable cards */
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Selected Card Style */
+
+    .card:hover {
+      border: 10px solid rgba(0, 123, 255, 0.5 );
+      background-color: #e7f3ff;
+    }
+
+    .card.selected {
+      border: 4px solid #007bff; /* Highlight border */
+      background-color: #e7f3ff; /* Light blue background */
+    }
+
+    /* Floating Button Bar */
+    .floating-buttons {
+      position: fixed; /* Makes the element float */
+      bottom: 20px; /* Distance from the bottom of the viewport */
+      right: 20px; /* Distance from the right side of the viewport */
+      background: #007bff; /* Background color */
+      padding: 10px; /* Padding inside the container */
+      border-radius: 5px; /* Rounded corners */
+      display: flex; /* Align buttons horizontally */
+      gap: 10px; /* Space between buttons */
+      z-index: 10; /* Ensure it stays above other elements */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    }
+
+    .floating-buttons button {
+      background: #fff; /* Button background color */
+      color: #007bff; /* Button text color */
+      border: none; /* No border */
+      padding: 10px 15px; /* Padding inside the buttons */
+      border-radius: 3px; /* Rounded corners for buttons */
+      cursor: pointer; /* Pointer cursor on hover */
+      font-size: 14px; /* Font size */
+      transition: background 0.3s ease, color 0.3s ease; /* Smooth transition */
+    }
+
+    .floating-buttons button:hover {
+      background: #0056b3; /* Hover background color */
+      color: #fff; /* Hover text color */
+    }
