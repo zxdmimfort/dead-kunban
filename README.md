@@ -2,6 +2,15 @@
 ```sh
 # Install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
-# Install dependencies and startup dev server
-uv run -- fastapi dev
+# Install dependencies
+uv sync
+# Start dev server
+fastapi dev src
+# or
+uvicorn src.main:app --reload
+```
+
+## Запуск линтера/форматера
+```sh
+ruff check --fix . && ruff format .
 ```
