@@ -1,22 +1,13 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 
-from fastapi import FastAPI, Request, APIRouter, Response
+from fastapi import FastAPI, Request, APIRouter, Response, Body
 
 api_router = APIRouter()
 
-from src.models import Kanban
+from src.models import Kanban, KanbanCard
 from fastapi import FastAPI, Request, Response
 from starlette.staticfiles import StaticFiles
 from src.models import Kanban
-
-
-@api_router.post('/kanban_push')
-def kanban_push(kanban: Kanban):
-    print(kanban)
-    return Response(status_code=404, headers={})
-
-
-from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
 import json
@@ -30,12 +21,9 @@ def kanban_pull(request: Request):
 
 
 @api_router.post('/kanban_push')
-def kanban_push():
-    print()
-    print(1 + 2)
+def kanban_push(kanban: Kanban):
+    # with open('../kanban.json', 'w', encoding='utf-8') as file:
+    #     json.dump(strkanban, file, ensure_ascii=False, indent=4)
+    with open('../kanban.json', 'w', encoding='utf-8') as file:
+        file.write(kanban.json())
     return Response(status_code=200)
-    # kanban = schema.load(data=loads, partial=True)
-    # print(kanban)
-    # with open('kanban.json', 'w', encoding='utf-8') as file:
-    #     json.dump(kanban, file, ensure_ascii=False, indent=4)
-    # return JSONResponse(content=obj)

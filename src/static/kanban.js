@@ -22,23 +22,26 @@ function newCard(id, el) {
     `;
 
 }
-function post(yourUrl, data) {
-    return new Promise((resolve, reject) => {
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", yourUrl, true); // 'true' makes the request asynchronous
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) { // Request completed
-                if (xhr.status === 200) {
-                    resolve(true); // Return true if status is 200
-                } else {
-                    resolve(false); // Return false for any other status
-                }
-            }
-        };
+async function post(yourUrl, data) {
+    try {
+        let request =  {
+            method: "POST",
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(  data )
+        }
+        const response = await fetch(yourUrl, request);
 
-        xhr.send( data );
-    });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        return await response.json(); // Optionally return the response data as JSON
+    } catch (error) {
+        console.error("Error during POST request:", error);
+        throw error; // Re-throw the error for further handling if needed
+    }
 }
 
 async function get(yourUrl) {
@@ -194,7 +197,7 @@ class KanbanController {
     }
 
     push() {
-        post('/kanban_push', JSON.stringify(this.model));
+        post('/kanban_push', this.model);
         this.sync();
     }
 //    export(){
