@@ -10,6 +10,11 @@ fastapi dev src
 uvicorn src.main:app --reload
 ```
 
+## Install pre-commit hooks
+```sh
+pre-commit install
+```
+
 ## Запуск линтера/форматера
 ```sh
 ruff check --fix . && ruff format .
