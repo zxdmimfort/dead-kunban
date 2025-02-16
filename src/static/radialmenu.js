@@ -24,7 +24,7 @@
 class MyMenu {
     constructor() {
         this.limitPie = true;
-        this.hideCurrentPageLink = true;
+        this.hideCurrentPageLink = false;
         this.lazy = true;
 
         this.cursor = document.querySelector('.cursor');

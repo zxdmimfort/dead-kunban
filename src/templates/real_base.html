@@ -12,10 +12,65 @@
 
 </head>
 <body>
-<!--<div id="root" style="position: fixed; z-index: 999"></div>-->
+
+
+
 {% block content%}
-<div id="root" style="position: fixed; z-index: 999"></div>
+<div class="menu" style="position: fixed; z-index: 999;">
+   <div class="cursor" style="z-index: 999; display: none;"></div>
+
+   <svg viewBox="0 0 64 64" class="pie" style="display: none;">
+       <circle id="thepie" r="25%" cx="50%" cy="50%" style="display: none; stroke-dasharray: 25 100; stroke-dashoffset: -50">
+       </circle>
+       <circle id="slice" cx="50%" cy="50%" r="25%" fill="red" style="display: none;   stroke-dasharray: 0 100; stroke-dashoffset: -50" transform="rotate(0 32 32)">
+       </circle>
+
+   </svg>
+
+   <div class="radial-menu" style="display: none;">
+       <div class="radial-menu-layer">
+           <a href="/home">
+               <button>Стартовая страница</button>
+           </a>
+
+           <a href="/masking/">
+               <button>Обфускация PDF</button>
+           </a>
+           <a href="/title/">
+               <button>Генерация титульников</button>
+           </a>
+           <a href="/kanban/">
+               <button>Kanban</button>
+           </a>
+
+           <a href="/teststyles/">
+               <button>Test styles</button>
+           </a>
+
+           <a href="/login/">
+               <button>login</button>
+           </a>
+
+           <a href="/logout/">
+               <button>logout</button>
+           </a>
+       </div>
+   </div>
+   <div class="hint" style="display: none;">ПКМ / долгий тап</div>
+</div>
 {%block floater%}{%endblock%}
+
+<div class="blackout" style="
+    display: none;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(255, 0, 0, 0.1);
+    color: white;
+">
+
+</div>
+
 <div style="padding-top: 5vh;padding-left: 5vw;">
 <span class="align-center">
 <h1 style="z-index: 998; background-color: rgba(255,255,255, 0.5);border-radius: 20px; width: 90vw" id="title">Личный сайт AOI-dev</h1>
