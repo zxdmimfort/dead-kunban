@@ -1,6 +1,7 @@
 {
     "files.exclude": {
         ".mypy_cache": true,
+        ".pytest_cache": true,
         ".python-version": true,
         ".ruff_cache": true,
         ".vscode": true,
@@ -8,5 +9,10 @@
         "**/.venv": true,
         "uv.lock": true
     },
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "afterDelay",
+    "python.testing.pytestArgs": [
+        "src"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

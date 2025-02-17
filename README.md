@@ -19,3 +19,11 @@ pre-commit install
 ```sh
 ruff check --fix . && ruff format .
 ```
+
+## Добавление/изменение моделей бд
+```sh
+# Создаем файл миграции
+alembic revision --autogenerate
+# Проводим миграцию
+alembic upgrade head
+```
