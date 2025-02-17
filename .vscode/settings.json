@@ -14,5 +14,19 @@
         "src"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "python.analysis.packageIndexDepths": [
+        {
+            "name": "django",
+            "depth": 2
+        },
+        {
+            "name": "sqlalchemy",
+            "depth": 3
+        },
+        {
+            "name": "fastapi",
+            "depth": 3
+        }
+    ]
 }
