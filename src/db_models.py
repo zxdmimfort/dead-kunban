@@ -22,7 +22,7 @@ class KanbanCard(Base):
     days_till_todo: Mapped[int] = mapped_column(default=-1)
     hours_till_todo: Mapped[int] = mapped_column(default=-1)
     history_records: Mapped[list["HistoryRecord"]] = relationship(
-        "HistoryRecord", back_populates="card"
+        "HistoryRecord", back_populates="card", cascade="all, delete-orphan"
     )
 
 
