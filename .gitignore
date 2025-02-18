@@ -5,3 +5,4 @@ uv.lock
 .mypy_cache
 .idea
 start.bat
+frontend/kanbanjs/node_modules/

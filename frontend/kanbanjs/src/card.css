@@ -1,0 +1,59 @@
+/* Draggable header */
+.dialog-header {
+  background: #007bff;
+  color: white;
+  padding: 10px;
+  cursor: move;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  border-bottom: 1px solid #0062cc;
+}
+
+
+.dialog-body label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.dialog-body input,
+.dialog-body select,
+.dialog-body textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Dialog footer */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.dialog-footer button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dialog-footer button.cancel {
+  background: #ccc;
+  margin-right: 10px;
+}
+
+.dialog-footer button.create {
+  background: #007bff;
+  color: white;
+}
+.dialog-footer button.update {
+  background: #007bff;
+  color: white;
+}
