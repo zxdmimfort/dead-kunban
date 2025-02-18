@@ -27,3 +27,11 @@ alembic revision --autogenerate
 # Проводим миграцию
 alembic upgrade head
 ```
+
+## Node.js
+```sh
+# скачивание модулей nodejs
+npm install
+# запуск дев сервера
+npm run dev
+```
