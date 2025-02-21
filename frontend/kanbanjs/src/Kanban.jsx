@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import Card from './App';
-import ColumnC from './ColumnC';
+import ColumnC from './ColumnComponent';
+import colDict from '../ColumnDict';
+
 const KanbanС = (props) => {
   const {  
     showInvisibleColumns, 
@@ -39,14 +41,20 @@ const KanbanС = (props) => {
 
         kanban: kanban
       }
-      const colDict = {
-        'todo': 'To Do',
-        'inprogress': 'In Progress',
-        'done': 'Done'
-      };
-      return Object.entries(colDict).map(([key, value]) => (
-        <ColumnC {...data} status={key} title={value} kanban={kanban}/>
-      ));
+
+      return Object.entries(colDict).map(([key, value]) => {
+        const k = key=="null" || key=="" ? null : key;
+        return (
+          <ColumnC
+            {...data}
+            status={k}
+            title={value}
+            cards={kanban.cards.filter(
+              (el) => el.status === k
+            )}
+          />
+        );
+      });
     }
     return (constructColumns());
   };

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { CardComponent } from './CardComponent.jsx'
 
 export default function ColumnComponent (data) {
-    const {kanban, selectedCardUseState, translateCard, setTranslateCard} = data;
+    const {cards, selectedCardUseState, translateCard, setTranslateCard} = data;
     const ref = useRef(null)
 
     const hoverUseState = useState(false)
@@ -46,9 +46,8 @@ export default function ColumnComponent (data) {
       <div ref={ref} className={`column ${(hover)? 'card-hover': ''}`} >
       <h3>{title}</h3>
       { (
-        kanban.cards
-            .filter(el => el.status == status)
-            .map((el, i) => 
+
+            cards.map((el, i) => 
               ( <CardComponent {...data} i={i} el={el}/> )
             )
         ) }

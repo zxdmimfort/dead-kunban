@@ -1,10 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import { STATE_CREATE_CARD, STATE_UPDATE_CARD } from './App';
 import { getUrl } from './requests';
+
+import { deleteUrl } from './requests';
+
+
+
 const ManagementPanel = (props) => {
 
-  const {setState, setFormVisible, setShowInvisibleColumns, setCards, selectedCard, draggingBoardUseState}= props
+  const {setState, setFormVisible, setShowInvisibleColumns, setCards, draggingBoardUseState}= props
 
+  const {selectedCardUseState} = props;
+  const [selected, setSelected] = selectedCardUseState;
   const [draggingEnabled, setEnableDragging] = draggingBoardUseState // checkbox for enabling board dragging
   const kanban_invisible = useRef(null);
 
@@ -24,6 +31,7 @@ const ManagementPanel = (props) => {
 
   const handleDelete = () => {
     console.log("Delete action triggered");
+    deleteUrl(`http://127.0.0.1:8000/api/cards/${selected.id}`, {});
 
   };
 
@@ -36,7 +44,7 @@ const ManagementPanel = (props) => {
 
   const handleSync = () => {
     console.log("Sync action triggered");
-    getUrl('http://127.0.0.1:5000/kanban_pull')
+    getUrl('http://127.0.0.1:8000/api/cards')
     .then(data => {
       console.log('Fetched data:', data);
       setCards(data);

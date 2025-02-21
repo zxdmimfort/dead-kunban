@@ -1,8 +1,8 @@
-import { hideGently, showGently, STATE_CREATE_CARD as MODE_CREATE_CARD } from './App';
+import { hideGently, showGently, STATE_CREATE_CARD as MODE_CREATE_CARD, STATE_CREATE_CARD, STATE_UPDATE_CARD as MODE_UPDATE_CARD } from './App';
 import './card.css';
 
 import { useState, useEffect, useRef } from 'react'
-
+import { postUrl } from './requests';
 
 
 
@@ -75,16 +75,8 @@ const DialogHeader = (props) => {
 };
 
 
-const CardForm = ({ onSubmit }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    assignee: "",
-    status: "todo",
-    dueDate: "",
-    period: -1,
-    priority: "normal",
-  });
+const CardForm = ({ onSubmit, formDataUseState }) => {
+  const [formData, setFormData] = formDataUseState
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,13 +86,11 @@ const CardForm = ({ onSubmit }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    onSubmit(formData);
-  };
+
 
   return (
     <div className="dialog-body">
-    <form id="cardForm" onSubmit={handleSubmit}>
+    <form id="cardForm" onSubmit={onSubmit}>
       <label htmlFor="title">Title:</label>
       <input
         type="text"
@@ -133,6 +123,7 @@ const CardForm = ({ onSubmit }) => {
       <select
         id="status"
         name="status"
+        defaultValue="todo"
         value={formData.status}
         onChange={handleChange}
       >
@@ -163,11 +154,12 @@ const CardForm = ({ onSubmit }) => {
       <select
         id="priority"
         name="priority"
+        defaultValue="low"
         value={formData.priority}
         onChange={handleChange}
       >
         <option value="low">Low</option>
-        <option value="normal" selected>
+        <option value="normal">
           Normal
         </option>
         <option value="high">High</option>
@@ -178,10 +170,10 @@ const CardForm = ({ onSubmit }) => {
 };
 
 
-const DialogFooter = ({ onCancel, onCreate, onUpdate, mode, visible }) => {
+const DialogFooter = ({ onSubmit, onCancel, mode, visible }) => {
   const butt = () => {
     if ( { visible } ){
-      return ( mode  == MODE_CREATE_CARD)? (<button className="create" onClick={onCreate}>Create</button>) : 
+      return ( mode  == MODE_CREATE_CARD)? (<button className="create" onClick={onSubmit}>Create</button>) : 
         (<button className="update" onClick={onUpdate}>Update</button>)
 
     }
@@ -202,22 +194,8 @@ const DialogFooter = ({ onCancel, onCreate, onUpdate, mode, visible }) => {
 const CreateCardDialog = ({mode, visible, setFormVisible}) => {
   const [opacity, setOpacity] = useState(1);
   const [display, setDisplay] = useState('inline');
-  
 
-  const handleCreate = (data) => {
-    console.log("Creating card with data:", data);
-  };
 
-  const handleUpdate = (data) => {
-    console.log("Updating card with data:", data);
-    setFormVisible(true);
-  };
-
-  const handleCancel = () => {
-    console.log("cancel")
-    setFormVisible(false);
-  };
-  
   useEffect(() => {
     if (visible) {
       setDisplay('');
@@ -241,28 +219,52 @@ const CreateCardDialog = ({mode, visible, setFormVisible}) => {
   const translateUseState = useState({'x': 0, 'y': 0})
   const [translate, setTranslate] = translateUseState;
 
-  return(
-    <DialogContainer display={display} opacity={opacity} 
+  const formDataUseState = useState({
+    title: "", 
+    description: "", 
+    assignee: "", 
+    status: "", 
+    dueDate: "", 
+    priority: "normal", 
+    period: "-1", 
+    // createdAt: new Date()
+});
+
+const handleSubmit = (e) => {
+  console.log(formData)
+  if (mode==MODE_CREATE_CARD)
+    postUrl('http://127.0.0.1:8000/api/cards', formData)
+
+  // if (mode== MODE_UPDATE_CARD)
+    // putUrl('http://127.0.0.1:8000/api/cards', formData)
+
+
+};
+const [formData, setFormData] = formDataUseState;
+
+return(
+  <DialogContainer display={display} opacity={opacity} 
+  translate={translate} 
+  lastPos={lastPos} 
+  isDraggingForm={isDraggingForm}>
+    <DialogHeader title="Create Card"
     translate={translate} 
+    setTranslate={setTranslate} 
+    setLastPos={setLastPos} 
     lastPos={lastPos} 
-    isDraggingForm={isDraggingForm}>
-      <DialogHeader title="Create Card"
-      translate={translate} 
-      setTranslate={setTranslate} 
-      setLastPos={setLastPos} 
-      lastPos={lastPos} 
-      isDraggingForm={isDraggingForm}
-      />
-      <CardForm onSubmit={handleCreate} style={{  padding: "20px",maxHeight: "300px",overflowY: "auto"}} />
-      <DialogFooter
-        mode={mode} 
-        visible={visible}
-        onCancel={handleCancel}
-        onCreate={handleCreate}
-        onUpdate={handleUpdate}
-      />
-    </DialogContainer>
-  );
+    isDraggingForm={isDraggingForm}
+    />
+    <CardForm formDataUseState={formDataUseState} style={{  padding: "20px",maxHeight: "300px",overflowY: "auto"}} />
+    <DialogFooter
+      mode={mode} 
+      visible={visible}
+      onCancel={() => {
+        setFormVisible(false);
+      }}
+      onSubmit={handleSubmit}
+    />
+  </DialogContainer>
+);
 };
 
 export default CreateCardDialog;

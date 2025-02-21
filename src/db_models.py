@@ -18,9 +18,11 @@ class KanbanCard(Base):
     created_at: Mapped[str | None] = mapped_column(nullable=True)
     period: Mapped[int] = mapped_column(default=-1)
     cooldown: Mapped[str] = mapped_column(default="")
+
     history_as_string: Mapped[str] = mapped_column(default="")
     days_till_todo: Mapped[int] = mapped_column(default=-1)
     hours_till_todo: Mapped[int] = mapped_column(default=-1)
+
     history_records: Mapped[list["HistoryRecord"]] = relationship(
         "HistoryRecord", back_populates="card", cascade="all, delete-orphan"
     )

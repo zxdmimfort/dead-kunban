@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from 'react'
-
+import colDict from '../ColumnDict';
 
 function next_job({hours_till_todo, days_till_todo, cooldown}){
   if (days_till_todo > 0 ) {
@@ -56,7 +56,8 @@ export function CardComponent(props) {
   }
   
   function mouseUp(e) {
-    const statuses = ["todo", "inprogress", "done"];
+
+    const statuses = Object.keys(colDict);
 
     drag.current = false;
     document.querySelectorAll('.column').forEach((columnElement, i) => {
