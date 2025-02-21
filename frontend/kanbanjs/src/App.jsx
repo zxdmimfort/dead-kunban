@@ -1,11 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import ManagementPanel from './kanban_management_menu_react.jsx'
+import ManagementPanel from './ManagementMenu.jsx'
 import './App.css'
 import './card.css'
-import KanbanContainer from './kanban_container_react.jsx'
-import CreateCardDialog from './form_react.jsx'
+import KanbanС from './Kanban.jsx'
+import CreateCardDialog from './Dialog.jsx'
 class Kanban {
   constructor() {
       this.columns = []
@@ -46,19 +44,19 @@ export function hideGently(element) {
 
 export class Card {
   constructor(id=0, title="", description="", assignee="", status="", dueDate="", priority = "normal", period="-1", createdAt = new Date()) {
-      this.id = id; // Unique identifier for the card
-      this.title = title; // Title of the card
-      this.description = description || ''; // Optional description
-      this.assignee = assignee; // Person responsible for the task
-      this.status = status; // Current status (e.g., 'To Do', 'In Progress', 'Done')
-      this.dueDate = dueDate; // Due date for the task
-      this.priority = priority; // Priority level (e.g., 'low', 'normal', 'high')
-      this.createdAt = createdAt; // Timestamp when the card was created
+      this.id = id;
+      this.title = title;
+      this.description = description || '';
+      this.assignee = assignee;
+      this.status = status;
+      this.dueDate = dueDate;
+      this.priority = priority;
+      this.createdAt = createdAt; 
       this.period = period; // regularity
 //        this.regular = ;
-//        this.comments = []; // Array to store comments
-//        this.attachments = []; // Array to store attachments
-      this.history = [{ status: this.status, timestamp: this.createdAt }]; // Track status changes
+//        this.comments = [];
+//        this.attachments = [];
+      this.history = [{ status: this.status, timestamp: this.createdAt }];
   }
 
   update({ title, description, assignee, status, dueDate, priority, period }) {
@@ -91,22 +89,20 @@ export class Card {
 
 function App() {
   
-  const [state, setState] = useState(STATE_CREATE_CARD)
+  const [mode, setMode] = useState(STATE_CREATE_CARD)
   const [showInvisibleColumns, setShowInvisibleColumns] = useState(false)
   const [kanban, setKanban] = useState({'columns': [], 'cards': []});
-  const [selectedCard, setSelectedCard] = useState(null);
+  const selectedCardUseState = useState(null);
   const [visible, setFormVisible] = useState(false);
-  const [isDraggingBoard, setIsDraggingBoard] = useState(false);
-  // const [cardPosition, setCardPosition] = useState({'x': 0, 'y':0});
+  const draggingBoardUseState= useState(false)
 
-  
   return (
     <>
       <ManagementPanel 
-        setState={setState} 
+        setState={setMode} 
         setFormVisible={setFormVisible} 
         setShowInvisibleColumns={setShowInvisibleColumns}
-        selectedCard={selectedCard}
+        selectedCard={selectedCardUseState}
         setCards={(data)=> {
           let kanban = new Kanban();            
           kanban.cards = data.cards.map(cardData => {
@@ -116,16 +112,18 @@ function App() {
           });
           setKanban({ columns: kanban.columns, cards: kanban.cards});
         }}
-        />
-      <KanbanContainer 
-        showInvisibleColumns={showInvisibleColumns} 
+        draggingBoardUseState={draggingBoardUseState}
+      />
+
+      <KanbanС 
         kanban={kanban}
-        setSelected={setSelectedCard}
-        selected={selectedCard}
-        isDraggingBoard={isDraggingBoard}
-        setIsDraggingBoard={setIsDraggingBoard}
+
+        showInvisibleColumns={showInvisibleColumns} 
+
+        selectedCardUseState={selectedCardUseState}
+        draggingBoardUseState={draggingBoardUseState}
         />
-      <CreateCardDialog mode={state} 
+      <CreateCardDialog mode={mode} 
         visible={visible} 
         setFormVisible={setFormVisible}/>
     </>

@@ -28,7 +28,7 @@ body #root {
   background-color: #f4f4f4;
   border-right: 1px solid #ddd;
 }
-.highlighted {
+.card-hover {
   background-color: #bfff00cb;
 
 }
