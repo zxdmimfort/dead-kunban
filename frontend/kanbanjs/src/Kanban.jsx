@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Card from './App';
 import ColumnC from './ColumnComponent';
-import colDict from '../ColumnDict';
+import colDict from './ColumnDict';
 
 const KanbanС = (props) => {
   const {  

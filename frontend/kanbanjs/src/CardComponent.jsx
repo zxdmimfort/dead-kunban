@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from 'react'
-import colDict from '../ColumnDict';
+import colDict from './ColumnDict';
 
 function next_job({hours_till_todo, days_till_todo, cooldown}){
   if (days_till_todo > 0 ) {
