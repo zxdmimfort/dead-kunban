@@ -51,6 +51,17 @@ function App() {
   const [visible, setFormVisible] = useState(false);
   const draggingBoardUseState= useState(false)
 
+  const formDataUseState = useState({
+    title: "", 
+    description: "", 
+    assignee: "", 
+    status: "", 
+    dueDate: "", 
+    priority: "normal", 
+    period: "-1", 
+    // createdAt: new Date()
+});
+
   return (
     <>
       <ManagementPanel 
@@ -58,6 +69,7 @@ function App() {
         setFormVisible={setFormVisible} 
         setShowInvisibleColumns={setShowInvisibleColumns}
         selectedCardUseState={selectedCardUseState}
+        formDataUseState={formDataUseState}
         setCards={(data)=> {
           let kanban = new Kanban();            
           kanban.cards = data.cards.map(cardData => {
@@ -78,9 +90,13 @@ function App() {
         selectedCardUseState={selectedCardUseState}
         draggingBoardUseState={draggingBoardUseState}
         />
+
       <CreateCardDialog mode={mode} 
+        formDataUseState={formDataUseState}
         visible={visible} 
-        setFormVisible={setFormVisible}/>
+        setFormVisible={setFormVisible}
+        selectedCardUseState={selectedCardUseState}
+        />
     </>
   )
 }

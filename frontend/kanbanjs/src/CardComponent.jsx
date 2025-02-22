@@ -59,7 +59,10 @@ export function CardComponent(props) {
 
     const statuses = Object.keys(colDict);
 
+    //TODO: STUPID HACK
+    statuses[3] = null;
     drag.current = false;
+
     document.querySelectorAll('.column').forEach((columnElement, i) => {
       const rect = columnElement.getBoundingClientRect();
       if (inRect(e, rect)) {

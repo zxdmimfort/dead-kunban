@@ -54,3 +54,24 @@ export async function deleteUrl(yourUrl, deleteData = null) {
         throw error;
     }
 }
+
+
+export async function putUrl(yourUrl, putData = {}) {
+    try {
+        const response = await fetch(yourUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(putData)
+        });
+        if (!response.ok) {
+            throw new Error(`PUT request failed with status ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error updating data:', error.message);
+        throw error;
+    }
+}

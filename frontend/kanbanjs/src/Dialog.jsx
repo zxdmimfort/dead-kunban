@@ -2,7 +2,7 @@ import { hideGently, showGently, STATE_CREATE_CARD as MODE_CREATE_CARD, STATE_CR
 import './card.css';
 
 import { useState, useEffect, useRef } from 'react'
-import { postUrl } from './requests';
+import { postUrl, putUrl } from './requests';
 
 
 
@@ -39,7 +39,6 @@ const DialogContainer = (props) => {
 };
 
 const DialogHeader = (props) => {
-
   const {isDraggingForm, setTranslate, translate, lastPos, setLastPos} = props;
   const delta = useRef({ 'x': 0, 'y':0 });
 
@@ -76,7 +75,8 @@ const DialogHeader = (props) => {
 
 
 const CardForm = ({ onSubmit, formDataUseState }) => {
-  const [formData, setFormData] = formDataUseState
+  const [formData, setFormData] = formDataUseState;
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -174,7 +174,7 @@ const DialogFooter = ({ onSubmit, onCancel, mode, visible }) => {
   const butt = () => {
     if ( { visible } ){
       return ( mode  == MODE_CREATE_CARD)? (<button className="create" onClick={onSubmit}>Create</button>) : 
-        (<button className="update" onClick={onUpdate}>Update</button>)
+        (<button className="update" onClick={onSubmit}>Update</button>)
 
     }
     else {
@@ -191,10 +191,11 @@ const DialogFooter = ({ onSubmit, onCancel, mode, visible }) => {
   );
 };
 
-const CreateCardDialog = ({mode, visible, setFormVisible}) => {
+const CreateCardDialog = (props) => {
+  const {mode, visible, setFormVisible, formDataUseState, selectedCardUseState} = props
   const [opacity, setOpacity] = useState(1);
   const [display, setDisplay] = useState('inline');
-
+  const [selected, setSelected] = selectedCardUseState;
 
   useEffect(() => {
     if (visible) {
@@ -219,24 +220,15 @@ const CreateCardDialog = ({mode, visible, setFormVisible}) => {
   const translateUseState = useState({'x': 0, 'y': 0})
   const [translate, setTranslate] = translateUseState;
 
-  const formDataUseState = useState({
-    title: "", 
-    description: "", 
-    assignee: "", 
-    status: "", 
-    dueDate: "", 
-    priority: "normal", 
-    period: "-1", 
-    // createdAt: new Date()
-});
 
 const handleSubmit = (e) => {
-  console.log(formData)
+  // console.log(formData)
   if (mode==MODE_CREATE_CARD)
     postUrl('http://127.0.0.1:8000/api/cards', formData)
 
-  // if (mode== MODE_UPDATE_CARD)
-    // putUrl('http://127.0.0.1:8000/api/cards', formData)
+  if (mode== MODE_UPDATE_CARD){
+    putUrl(`http://127.0.0.1:8000/api/cards/${selected.id}`, formData)
+    }
 
 
 };
