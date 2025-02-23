@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Card from '../App';
-import ColumnC from './ColumnComponent';
+import ColumnComponent from './ColumnComponent';
 import colDict from './ColumnDict';
 
 const KanbanС = (props) => {
@@ -42,10 +42,12 @@ const KanbanС = (props) => {
         ...props
       }
 
-      return Object.entries(colDict).map(([key, value]) => {
+   
+        return (Object.entries(colDict).map(([key, value]) => {
         const k = key=="null" || key=="" ? null : key;
         return (
-          <ColumnC
+          <ColumnComponent
+            key={k}
             {...data}
             status={k}
             title={value}
@@ -54,7 +56,8 @@ const KanbanС = (props) => {
             )}
           />
         );
-      });
+        
+      }));
     }
     return (constructColumns());
   };

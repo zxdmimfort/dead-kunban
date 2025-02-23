@@ -13,7 +13,7 @@ function next_job({hours_till_todo, days_till_todo, cooldown}){
 
 export function CardComponent(props) {
   const {selectedCardUseState,} = props
-  const {i, el} = props;
+  const {el} = props;
   const {translate, scale} = props;
   
   const [hasSelectedStyle, setSelectedStyle] = useState(false);
