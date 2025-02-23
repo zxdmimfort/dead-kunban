@@ -1,8 +1,8 @@
-import { hideGently, showGently, STATE_CREATE_CARD as MODE_CREATE_CARD, STATE_CREATE_CARD, STATE_UPDATE_CARD as MODE_UPDATE_CARD } from './App';
-import './card.css';
+import { hideGently, showGently, STATE_CREATE_CARD as MODE_CREATE_CARD, STATE_CREATE_CARD, STATE_UPDATE_CARD as MODE_UPDATE_CARD } from '../App';
+import '../card.css';
 
 import { useState, useEffect, useRef } from 'react'
-import { postUrl, putUrl } from './requests';
+import { postUrl, putUrl } from '../requests';
 
 
 
@@ -18,8 +18,8 @@ const DialogContainer = (props) => {
       borderRadius: "8px",
       overflow: "hidden",
       zIndex: 1000,
-      top: 0,
-      left: 0
+      top: translate.x,
+      left: translate.y
   };
   
   const containerStyle = {
@@ -48,7 +48,7 @@ const DialogHeader = (props) => {
       isDraggingForm.current = false;
     }}
 
-    onMouseDown={(e)=> { 
+    onMouseDown={(e)=> {
         e.preventDefault()
         isDraggingForm.current = true;   
 
@@ -223,12 +223,27 @@ const CreateCardDialog = (props) => {
 
 const handleSubmit = (e) => {
   // console.log(formData)
-  if (mode==MODE_CREATE_CARD)
-    postUrl('http://127.0.0.1:8000/api/cards', formData)
+  if (mode==MODE_CREATE_CARD){
+    postUrl('http://127.0.0.1:8000/api/cards', formData).then( () =>
+      getUrl('http://127.0.0.1:8000/api/cards')
+      .then(data => {
+        console.log('Fetched data:', data);
+        setCards(data);
+      })
+    )
+    
+
+  }
 
   if (mode== MODE_UPDATE_CARD){
-    putUrl(`http://127.0.0.1:8000/api/cards/${selected.id}`, formData)
-    }
+    putUrl(`http://127.0.0.1:8000/api/cards/${selected.id}`, formData).then( () =>
+      getUrl('http://127.0.0.1:8000/api/cards')
+      .then(data => {
+        console.log('Fetched data:', data);
+        setCards(data);
+      })
+    )
+  }
 
 
 };

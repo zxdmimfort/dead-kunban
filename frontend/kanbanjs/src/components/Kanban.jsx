@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import Card from './App';
+import Card from '../App';
 import ColumnC from './ColumnComponent';
 import colDict from './ColumnDict';
 
@@ -7,7 +7,7 @@ const KanbanС = (props) => {
   const {  
     showInvisibleColumns, 
     selectedCardUseState,
-    draggingBoardUseState
+    draggingBoardUseState,
   } = props
 
   const {kanban} = props
@@ -19,7 +19,7 @@ const KanbanС = (props) => {
 
   const [scale, setScale] = useState(1);
   const [lastPos, setLastPos] = useState({'x': 0, 'y': 0});
-  const [translate, setTranslate] = useState({'x': 0, 'y': 0});
+  const [translateBoard, setTranslateBoard] = useState({'x': 0, 'y': 0});
 
   const [translateCard, setTranslateCard] = useState({'x': 0, 'y': 0});
 
@@ -38,8 +38,8 @@ const KanbanС = (props) => {
         translate: translateCard ,
         scale: scale,
         setTranslate: setTranslateCard,
-
-        kanban: kanban
+        kanban: kanban,
+        ...props
       }
 
       return Object.entries(colDict).map(([key, value]) => {
@@ -67,8 +67,7 @@ const KanbanС = (props) => {
 
       style={{ 
         position: "relative",
-        width: "100vw",
-        height: "100vh",
+        height: "80vh",
         overflow: "hidden",
         touchAction: "none"
        }}
@@ -94,7 +93,7 @@ const KanbanС = (props) => {
           const matrix = new DOMMatrix(currentTransform);
           const translateX = (matrix.e || 0) + 2 * dx;
           const translateY = (matrix.f || 0) + 5 * dy;
-          setTranslate({
+          setTranslateBoard({
             x: translateX,
             y: translateY
           });
@@ -131,7 +130,7 @@ const KanbanС = (props) => {
           display: "flex",
           flexDirection: "row",
           width:"100%", 
-          transform:  (draggingEnabled)? `translate(${translate.x}px, ${translate.y}px) scale(${scale})` : `translate(${0}px, ${0}px) scale(${1})`
+          transform:  (draggingEnabled)? `translate(${translateBoard.x}px, ${translateBoard.y}px) scale(${scale})` : `translate(${0}px, ${0}px) scale(${1})`
       }}>
         { populate(kanban) }
       </div>

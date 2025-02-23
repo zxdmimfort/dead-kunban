@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import colDict from './ColumnDict';
+import { putUrl, getUrl } from '../requests';
 
 function next_job({hours_till_todo, days_till_todo, cooldown}){
   if (days_till_todo > 0 ) {
@@ -17,7 +18,7 @@ export function CardComponent(props) {
   
   const [hasSelectedStyle, setSelectedStyle] = useState(false);
   const [selectedCard, setSelectedCard] = selectedCardUseState;
-
+  const { setCards } = props;
   const drag = useRef(false);
   const clientX=useRef(0.)
   const clientY=useRef(0.)
@@ -38,6 +39,11 @@ export function CardComponent(props) {
       clientY.current = e.clientY;
       drag.current = true;
     }
+    if (e.button == 2) {
+      setSelectedCard(el);
+      setSelectedStyle(true);
+    }
+
   }
   useEffect(()=> {
     if (selectedCard !== el)
@@ -68,8 +74,16 @@ export function CardComponent(props) {
       if (inRect(e, rect)) {
         if (selectedCard.status==statuses[i]) {
           // остались где были. 
-        } else {
+        } else  {
           selectedCard.status = statuses[i];
+          putUrl(`http://127.0.0.1:8000/api/cards/${selectedCard.id}`, selectedCard).then( () =>
+            getUrl('http://127.0.0.1:8000/api/cards')
+            .then(data => {
+              console.log('Fetched data:', data);
+              setCards(data);
+            })
+          )
+
           setSelectedCard(null);
         }
       }

@@ -57,3 +57,42 @@
   background: #007bff;
   color: white;
 }
+
+
+/* Context Menu Styling */
+.context-menu {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+  min-width: 150px;
+}
+
+.context-menu.hidden {
+  display: none;
+}
+
+.context-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.context-menu li {
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.context-menu li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Optional: Highlight selected action */
+.context-menu li[data-action]:active {
+  background-color: #e0e0e0;
+}

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import ManagementPanel from './ManagementMenu.jsx'
+import ManagementPanel from './components/ManagementMenu.jsx'
 import './App.css'
 import './card.css'
-import KanbanС from './Kanban.jsx'
-import CreateCardDialog from './Dialog.jsx'
+import KanbanС from './components/Kanban.jsx'
+import CreateCardDialog from './components/Dialog.jsx'
 import Card from './Card.jsx'
 
 
@@ -42,6 +42,8 @@ export function hideGently(element) {
   }
 }
 
+
+
 function App() {
   
   const [mode, setMode] = useState(STATE_CREATE_CARD)
@@ -50,6 +52,16 @@ function App() {
   const selectedCardUseState = useState(null);
   const [visible, setFormVisible] = useState(false);
   const draggingBoardUseState= useState(false)
+
+  function setCards(data) {
+    let kanban = new Kanban();            
+    kanban.cards = data.cards.map(cardData => {
+        const card = new Card();
+        Object.assign(card, cardData);
+        return card;
+    });
+    setKanban({ cards: kanban.cards });
+  }
 
   const formDataUseState = useState({
     title: "", 
@@ -64,27 +76,18 @@ function App() {
 
   return (
     <>
-      <ManagementPanel 
-        setState={setMode} 
-        setFormVisible={setFormVisible} 
-        setShowInvisibleColumns={setShowInvisibleColumns}
-        selectedCardUseState={selectedCardUseState}
-        formDataUseState={formDataUseState}
-        setCards={(data)=> {
-          let kanban = new Kanban();            
-          kanban.cards = data.cards.map(cardData => {
-              const card = new Card();
-              Object.assign(card, cardData);
-              return card;
-          });
-          setKanban({ cards: kanban.cards });
-        }}
-        draggingBoardUseState={draggingBoardUseState}
-      />
-
+        <ManagementPanel 
+          setState={setMode} 
+          setFormVisible={setFormVisible} 
+          setShowInvisibleColumns={setShowInvisibleColumns}
+          selectedCardUseState={selectedCardUseState}
+          formDataUseState={formDataUseState}
+          setCards={setCards}
+          draggingBoardUseState={draggingBoardUseState}
+        />
       <KanbanС 
         kanban={kanban}
-
+        setCards={setCards}
         showInvisibleColumns={showInvisibleColumns} 
 
         selectedCardUseState={selectedCardUseState}

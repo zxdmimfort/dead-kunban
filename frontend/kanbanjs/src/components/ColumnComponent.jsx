@@ -11,13 +11,9 @@ export default function ColumnComponent (data) {
     
     useEffect(()=>{
       const handleCardOver = (event) => {
-        const { detail } = event;
-        console.log('Card Over Event:', detail);
         setHover(true)
       };
       const handleCardLeave = (event) => {
-        const { detail } = event;
-        console.log('Card Over Event:', detail);
         setHover(false)
       };
       if (ref.current) {
@@ -41,16 +37,12 @@ export default function ColumnComponent (data) {
 
 
     const {status, title} = data;
-    
+
+
     return <>
       <div ref={ref} className={`column ${(hover)? 'card-hover': ''}`} >
       <h3>{title}</h3>
-      { (
-
-            cards.map((el, i) => 
-              ( <CardComponent {...data} i={i} el={el}/> )
-            )
-        ) }
+      { ( cards.map((el, i) => <CardComponent {...data} i={i} el={el}/>) ) }
     </div>
     </>
   }

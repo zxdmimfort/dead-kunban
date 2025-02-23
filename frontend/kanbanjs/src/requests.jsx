@@ -1,3 +1,4 @@
+
 export async function getUrl(yourUrl) {
     try {
         const response = await fetch(yourUrl);
