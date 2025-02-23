@@ -124,8 +124,9 @@ const ManagementPanel = (props) => {
 
   return (
 
-<div id="management-panel" className={`${hidden ? "context-menu hidden" : "context-menu"}`} 
-style={{left: `${mouseCoordinates.x}px`, top:`${mouseCoordinates.y}px` }}>
+<div id="management-panel" 
+className={`${hidden ? "context-menu hidden" : "context-menu"}`} 
+style={{left: `${mouseCoordinates.x}px`, top:`${mouseCoordinates.y}px`}}>
       <ul>
         <li onClick={handleSync}>sync</li>
         <li onClick={handleCreateCard}>create</li>

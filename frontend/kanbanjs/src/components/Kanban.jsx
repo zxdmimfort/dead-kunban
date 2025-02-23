@@ -41,8 +41,6 @@ const KanbanС = (props) => {
         kanban: kanban,
         ...props
       }
-
-   
         return (Object.entries(colDict).map(([key, value]) => {
         const k = key=="null" || key=="" ? null : key;
         return (

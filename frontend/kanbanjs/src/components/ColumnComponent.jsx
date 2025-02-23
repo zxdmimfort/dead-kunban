@@ -42,9 +42,7 @@ export default function ColumnComponent (data) {
     return <>
       <div ref={ref} className={`column ${(hover)? 'card-hover': ''}`} >
       <h3>{title}</h3>
-      <ul style={{listStyleType: "none"}}>
-      { ( cards.map((el) => <li key={el.id}><CardComponent  {...data} el={el}/></li>) ) }
-      </ul>
+      { ( cards.map((el) => <CardComponent key={el.id} {...data} el={el}/>) ) }
     </div>
     </>
   }
