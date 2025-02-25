@@ -1,62 +1,71 @@
-import { hideGently, showGently, STATE_CREATE_CARD as MODE_CREATE_CARD, STATE_CREATE_CARD, STATE_UPDATE_CARD as MODE_UPDATE_CARD } from '../App';
-import '../card.css';
+import {
+  hideGently,
+  showGently,
+  STATE_CREATE_CARD as MODE_CREATE_CARD,
+  STATE_CREATE_CARD,
+  STATE_UPDATE_CARD as MODE_UPDATE_CARD,
+} from "../App";
+import "../card.css";
 
-import { useState, useEffect, useRef } from 'react'
-import { postUrl, putUrl } from '../requests';
-
-
+import { useState, useEffect, useRef } from "react";
+import { postUrl, putUrl } from "../requests";
 
 const DialogContainer = (props) => {
-    const { children, display, opacity, translate } = props;
-    const existingStyle = {
-      position: "fixed",
-      width: "350px",
-      maxWidth: "90%",
-      background: "#fff",
-      border: "1px solid #ccc",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      borderRadius: "8px",
-      overflow: "hidden",
-      zIndex: 1000,
-      top: translate.x,
-      left: translate.y
+  const { children, display, opacity, translate } = props;
+  const existingStyle = {
+    position: "fixed",
+    width: "350px",
+    maxWidth: "90%",
+    background: "#fff",
+    border: "1px solid #ccc",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    borderRadius: "8px",
+    overflow: "hidden",
+    zIndex: 1000,
+    top: translate.x,
+    left: translate.y,
   };
-  
+
   const containerStyle = {
     opacity: opacity,
     display: display,
-    transition: 'opacity 0.5s',
-  };          
+    transition: "opacity 0.5s",
+  };
 
   return (
-    <div className="dialog-container draggable" style={{ ...existingStyle, ...containerStyle,
-      top: translate.y,
-      left: translate.x
-     }}>
+    <div
+      className="dialog-container draggable"
+      style={{
+        ...existingStyle,
+        ...containerStyle,
+        top: translate.y,
+        left: translate.x,
+      }}
+    >
       {children}
     </div>
   );
 };
 
 const DialogHeader = (props) => {
-  const {isDraggingForm, setTranslate, translate, lastPos, setLastPos} = props;
-  const delta = useRef({ 'x': 0, 'y':0 });
+  const { isDraggingForm, setTranslate, translate, lastPos, setLastPos } =
+    props;
+  const delta = useRef({ x: 0, y: 0 });
 
-  return <div className="dialog-header" 
+  return (
+    <div
+      className="dialog-header"
+      onMouseUp={(e) => {
+        isDraggingForm.current = false;
+      }}
+      onMouseDown={(e) => {
+        e.preventDefault();
+        isDraggingForm.current = true;
 
-    onMouseUp={(e)=>{    
-      isDraggingForm.current = false;
-    }}
-
-    onMouseDown={(e)=> {
-        e.preventDefault()
-        isDraggingForm.current = true;   
-
-        setLastPos({x: e.clientX, y: e.clientY})
-    }}      
-    
-    onMouseMove={(e)=>{
-      if (isDraggingForm.current){
+        setLastPos({ x: e.clientX, y: e.clientY });
+      }}
+      onMouseMove={(e) => {
+        if (isDraggingForm.current) {
           e.preventDefault();
           const deltaX = e.clientX - lastPos.x;
           const deltaY = e.clientY - lastPos.y;
@@ -67,16 +76,16 @@ const DialogHeader = (props) => {
           }));
 
           setLastPos({ x: e.clientX, y: e.clientY });
-      }
-    }
-  }
-  >{props.title}</div>;
+        }
+      }}
+    >
+      {props.title}
+    </div>
+  );
 };
-
 
 const CardForm = ({ onSubmit, formDataUseState }) => {
   const [formData, setFormData] = formDataUseState;
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,192 +95,199 @@ const CardForm = ({ onSubmit, formDataUseState }) => {
     }));
   };
 
-
-
   return (
     <div className="dialog-body">
-    <form id="cardForm" onSubmit={onSubmit}>
-      <label htmlFor="title">Title:</label>
-      <input
-        type="text"
-        id="title"
-        name="title"
-        required
-        value={formData.title}
-        onChange={handleChange}
-      />
+      <form id="cardForm" onSubmit={onSubmit}>
+        <label htmlFor="title">Title:</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          required
+          value={formData.title}
+          onChange={handleChange}
+        />
 
-      <label htmlFor="description">Description:</label>
-      <textarea
-        id="description"
-        name="description"
-        rows="3"
-        value={formData.description}
-        onChange={handleChange}
-      ></textarea>
+        <label htmlFor="description">Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="3"
+          value={formData.description}
+          onChange={handleChange}
+        ></textarea>
 
-      <label htmlFor="assignee">Assignee:</label>
-      <input
-        type="text"
-        id="assignee"
-        name="assignee"
-        value={formData.assignee}
-        onChange={handleChange}
-      />
+        <label htmlFor="assignee">Assignee:</label>
+        <input
+          type="text"
+          id="assignee"
+          name="assignee"
+          value={formData.assignee}
+          onChange={handleChange}
+        />
 
-      <label htmlFor="status">Status:</label>
-      <select
-        id="status"
-        name="status"
-        defaultValue="todo"
-        value={formData.status}
-        onChange={handleChange}
-      >
-        <option value="todo">To Do</option>
-        <option value="inprogress">In Progress</option>
-        <option value="done">Done</option>
-      </select>
+        <label htmlFor="status">Status:</label>
+        <select
+          id="status"
+          name="status"
+          defaultValue="todo"
+          value={formData.status}
+          onChange={handleChange}
+        >
+          <option value="todo">To Do</option>
+          <option value="inprogress">In Progress</option>
+          <option value="done">Done</option>
+        </select>
 
-      <label htmlFor="dueDate">Due Date:</label>
-      <input
-        type="date"
-        id="dueDate"
-        name="dueDate"
-        value={formData.dueDate}
-        onChange={handleChange}
-      />
+        <label htmlFor="dueDate">Due Date:</label>
+        <input
+          type="date"
+          id="dueDate"
+          name="dueDate"
+          value={formData.dueDate}
+          onChange={handleChange}
+        />
 
-      <label htmlFor="period">Schedule every (days):</label>
-      <input
-        type="number"
-        id="period"
-        name="period"
-        value={formData.period}
-        onChange={handleChange}
-      />
+        <label htmlFor="period">Schedule every (days):</label>
+        <input
+          type="number"
+          id="period"
+          name="period"
+          value={formData.period}
+          onChange={handleChange}
+        />
 
-      <label htmlFor="priority">Priority:</label>
-      <select
-        id="priority"
-        name="priority"
-        defaultValue="low"
-        value={formData.priority}
-        onChange={handleChange}
-      >
-        <option value="low">Low</option>
-        <option value="normal">
-          Normal
-        </option>
-        <option value="high">High</option>
-      </select>
-    </form>  
+        <label htmlFor="priority">Priority:</label>
+        <select
+          id="priority"
+          name="priority"
+          defaultValue="low"
+          value={formData.priority}
+          onChange={handleChange}
+        >
+          <option value="low">Low</option>
+          <option value="normal">Normal</option>
+          <option value="high">High</option>
+        </select>
+      </form>
     </div>
-    );
+  );
 };
-
 
 const DialogFooter = ({ onSubmit, onCancel, mode, visible }) => {
   const butt = () => {
-    if ( { visible } ){
-      return ( mode  == MODE_CREATE_CARD)? (<button className="create" onClick={onSubmit}>Create</button>) : 
-        (<button className="update" onClick={onSubmit}>Update</button>)
-
+    if ({ visible }) {
+      return mode == MODE_CREATE_CARD ? (
+        <button className="create" onClick={onSubmit}>
+          Create
+        </button>
+      ) : (
+        <button className="update" onClick={onSubmit}>
+          Update
+        </button>
+      );
+    } else {
+      return <></>;
     }
-    else {
-      return (<></>)
-    }
-  }
+  };
   return (
     <div className="dialog-footer">
       <button className="cancel" onClick={onCancel}>
         Cancel
       </button>
-        { butt() }
+      {butt()}
     </div>
   );
 };
 
 const CreateCardDialog = (props) => {
-  const {mode, visible, setFormVisible, formDataUseState, selectedCardUseState} = props
+  const {
+    mode,
+    visible,
+    setFormVisible,
+    formDataUseState,
+    selectedCardUseState,
+  } = props;
   const [opacity, setOpacity] = useState(1);
-  const [display, setDisplay] = useState('inline');
+  const [display, setDisplay] = useState("inline");
   const [selected, setSelected] = selectedCardUseState;
 
   useEffect(() => {
     if (visible) {
-      setDisplay('');
+      setDisplay("");
       setOpacity(0);
       setTimeout(() => {
-        setDisplay('inline');
+        setDisplay("inline");
         setOpacity(1);
       }, 10);
-    } else {      
-      setDisplay('');
+    } else {
+      setDisplay("");
       setOpacity(1);
       setTimeout(() => {
-        setDisplay('none');
+        setDisplay("none");
         setOpacity(0);
       }, 10);
     }
   }, [visible]);
 
-  const isDraggingForm = useRef(false)
-  const [lastPos, setLastPos] = useState({'x': 0, 'y': 0});
-  const translateUseState = useState({'x': 0, 'y': 0})
+  const isDraggingForm = useRef(false);
+  const [lastPos, setLastPos] = useState({ x: 0, y: 0 });
+  const translateUseState = useState({ x: 0, y: 0 });
   const [translate, setTranslate] = translateUseState;
 
+  const handleSubmit = (e) => {
+    // console.log(formData)
+    if (mode == MODE_CREATE_CARD) {
+      postUrl("http://127.0.0.1:8000/api/cards", formData).then(() =>
+        getUrl("http://127.0.0.1:8000/api/cards").then((data) => {
+          console.log("Fetched data:", data);
+          setCards(data);
+        }),
+      );
+    }
 
-const handleSubmit = (e) => {
-  // console.log(formData)
-  if (mode==MODE_CREATE_CARD){
-    postUrl('http://127.0.0.1:8000/api/cards', formData).then( () =>
-      getUrl('http://127.0.0.1:8000/api/cards')
-      .then(data => {
-        console.log('Fetched data:', data);
-        setCards(data);
-      })
-    )
-    
+    if (mode == MODE_UPDATE_CARD) {
+      putUrl(`http://127.0.0.1:8000/api/cards/${selected.id}`, formData).then(
+        () =>
+          getUrl("http://127.0.0.1:8000/api/cards").then((data) => {
+            console.log("Fetched data:", data);
+            setCards(data);
+          }),
+      );
+    }
+  };
+  const [formData, setFormData] = formDataUseState;
 
-  }
-
-  if (mode== MODE_UPDATE_CARD){
-    putUrl(`http://127.0.0.1:8000/api/cards/${selected.id}`, formData).then( () =>
-      getUrl('http://127.0.0.1:8000/api/cards')
-      .then(data => {
-        console.log('Fetched data:', data);
-        setCards(data);
-      })
-    )
-  }
-
-
-};
-const [formData, setFormData] = formDataUseState;
-
-return(
-  <DialogContainer display={display} opacity={opacity} 
-  translate={translate} 
-  lastPos={lastPos} 
-  isDraggingForm={isDraggingForm}>
-    <DialogHeader title="Create Card"
-    translate={translate} 
-    setTranslate={setTranslate} 
-    setLastPos={setLastPos} 
-    lastPos={lastPos} 
-    isDraggingForm={isDraggingForm}
-    />
-    <CardForm formDataUseState={formDataUseState} style={{  padding: "20px",maxHeight: "300px",overflowY: "auto"}} />
-    <DialogFooter
-      mode={mode} 
-      visible={visible}
-      onCancel={() => {
-        setFormVisible(false);
-      }}
-      onSubmit={handleSubmit}
-    />
-  </DialogContainer>
-);
+  return (
+    <DialogContainer
+      display={display}
+      opacity={opacity}
+      translate={translate}
+      lastPos={lastPos}
+      isDraggingForm={isDraggingForm}
+    >
+      <DialogHeader
+        title="Create Card"
+        translate={translate}
+        setTranslate={setTranslate}
+        setLastPos={setLastPos}
+        lastPos={lastPos}
+        isDraggingForm={isDraggingForm}
+      />
+      <CardForm
+        formDataUseState={formDataUseState}
+        style={{ padding: "20px", maxHeight: "300px", overflowY: "auto" }}
+      />
+      <DialogFooter
+        mode={mode}
+        visible={visible}
+        onCancel={() => {
+          setFormVisible(false);
+        }}
+        onSubmit={handleSubmit}
+      />
+    </DialogContainer>
+  );
 };
 
 export default CreateCardDialog;

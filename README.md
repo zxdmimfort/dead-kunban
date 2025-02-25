@@ -34,4 +34,6 @@ alembic upgrade head
 npm install
 # запуск дев сервера
 npm run dev
+# формат
+npx prettier --write .
 ```

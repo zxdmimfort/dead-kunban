@@ -10,7 +10,6 @@
   border-bottom: 1px solid #0062cc;
 }
 
-
 .dialog-body label {
   display: block;
   margin-bottom: 5px;
@@ -57,7 +56,6 @@
   background: #007bff;
   color: white;
 }
-
 
 /* Context Menu Styling */
 .context-menu {

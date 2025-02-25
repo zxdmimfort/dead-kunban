@@ -1,4 +1,3 @@
-
 /* General Styles */
 body #root {
   margin: 0;
@@ -30,7 +29,6 @@ body #root {
 }
 .card-hover {
   background-color: #bfff00cb;
-
 }
 
 .card {
@@ -44,13 +42,15 @@ body #root {
   resize: vertical;
   overflow-y: auto;
   cursor: pointer; /* Pointer cursor for clickable cards */
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
 }
 
 /* Selected Card Style */
 
 .card:hover {
-  border: 10px solid rgba(0, 123, 255, 0.5 );
+  border: 10px solid rgba(0, 123, 255, 0.5);
   background-color: #e7f3ff;
 }
 
@@ -81,13 +81,12 @@ body #root {
   border-radius: 3px; /* Rounded corners for buttons */
   cursor: pointer; /* Pointer cursor on hover */
   font-size: 14px; /* Font size */
-  transition: background 0.3s ease, color 0.3s ease; /* Smooth transition */
+  transition:
+    background 0.3s ease,
+    color 0.3s ease; /* Smooth transition */
 }
 
 .floating-buttons button:hover {
   background: #0056b3; /* Hover background color */
   color: #fff; /* Hover text color */
 }
-
-
-
