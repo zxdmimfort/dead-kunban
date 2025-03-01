@@ -31,9 +31,18 @@ alembic upgrade head
 ## Node.js
 ```sh
 # скачивание модулей nodejs
+cd frontend
 npm install
 # запуск дев сервера
 npm run dev
 # формат
 npx prettier --write .
+```
+
+## Make
+```sh
+# Установка
+make setup
+# Запуск dev серверов
+make dev
 ```

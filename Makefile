@@ -1,4 +1,4 @@
-.PHONY: dev
+.PHONY: dev setup
 
 dev:
 	@echo "Starting backend and frontend..."
@@ -8,3 +8,10 @@ dev:
 	(cd frontend && npm run dev) &
 	wait
 
+
+setup:
+	@echo "Installing and configuring dependencies..."
+	@curl -LsSf https://astral.sh/uv/install.sh | sh && \
+	uv sync && \
+	uv run pre-commit install && \
+	cd frontend && npm install
