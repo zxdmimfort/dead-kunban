@@ -1,8 +1,8 @@
-uv.lock
-.venv
+**/uv.lock
+**/.venv
 **/__pycache__
-.ruff_cache
-.mypy_cache
-.idea
-start.bat
-frontend/kanbanjs/node_modules/
+**/.ruff_cache
+**/.mypy_cache
+**/.idea
+**/start.bat
+**/node_modules
