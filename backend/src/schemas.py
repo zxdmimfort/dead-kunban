@@ -29,3 +29,13 @@ class KanbanCard(BaseModel):
 class Kanban(BaseModel):
     columns: list | None = None
     cards: list[KanbanCard] | None = []
+
+
+class User(BaseModel):
+    username: str | None = None
+    password: str | None = None
+    email: str | None = None
+    token: str | None = None
+    kanban: Kanban | None = None
+    kanban_id: int | None = None
+    id: int | None = None

@@ -1,5 +1,6 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from typing import Optional
 
 
 class Base(DeclarativeBase):
@@ -11,7 +12,12 @@ class KanbanCard(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     title: Mapped[str | None] = mapped_column(nullable=True)
     description: Mapped[str | None] = mapped_column(nullable=True)
-    assignee: Mapped[str | None] = mapped_column(nullable=True)
+    assignee_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id"), nullable=True
+    )
+    assignee: Mapped[Optional["User"]] = relationship(
+        "User", back_populates="kanban_cards"
+    )
     status: Mapped[str | None] = mapped_column(nullable=True)
     due_date: Mapped[str | None] = mapped_column(nullable=True)
     priority: Mapped[str | None] = mapped_column(nullable=True)
@@ -36,4 +42,16 @@ class HistoryRecord(Base):
     card_id: Mapped[int] = mapped_column(ForeignKey("kanban_cards.id"))
     card: Mapped["KanbanCard"] = relationship(
         "KanbanCard", back_populates="history_records"
+    )
+
+
+class User(Base):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    username: Mapped[str | None] = mapped_column(nullable=True)
+    password: Mapped[str | None] = mapped_column(nullable=True)
+    email: Mapped[str | None] = mapped_column(nullable=True)
+    token: Mapped[str | None] = mapped_column(nullable=True)
+    kanban_cards: Mapped[list["KanbanCard"]] = relationship(
+        "KanbanCard", back_populates="assignee"
     )

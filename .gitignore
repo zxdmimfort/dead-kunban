@@ -6,3 +6,4 @@
 **/.idea
 **/start.bat
 **/node_modules
+**/*.db
