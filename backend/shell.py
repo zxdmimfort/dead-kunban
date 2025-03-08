@@ -1,11 +1,15 @@
 from src.config import get_engine, get_session
-from src.db_models import Base, HistoryRecord, KanbanCard  # Импортируйте свои модели
+from src.db_models import (
+    Base,
+    HistoryRecord,
+    KanbanCard,
+    User,
+)
 import IPython
 
 engine = get_engine()
 Session = get_session(engine)
 
-# Определяем переменные, доступные в сессии шелла
 locals_dict = globals().copy()
 locals_dict.update(
     {
@@ -14,6 +18,7 @@ locals_dict.update(
         "Base": Base,
         "KanbanCard": KanbanCard,
         "HistoryRecord": HistoryRecord,
+        "User": User,
     }
 )
 

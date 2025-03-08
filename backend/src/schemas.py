@@ -13,7 +13,6 @@ class KanbanCard(BaseModel):
     id: int | None = None
     title: str | None = None
     description: str | None = None
-    assignee: str | None = None
     status: str | None = None
     due_date: str | None = None
     priority: str | None = None

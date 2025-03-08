@@ -236,7 +236,6 @@ const CreateCardDialog = (props) => {
   const [translate, setTranslate] = translateUseState;
 
   const handleSubmit = (e) => {
-    // console.log(formData)
     if (mode == MODE_CREATE_CARD) {
       postUrl("http://127.0.0.1:8000/api/cards", formData).then(() =>
         getUrl("http://127.0.0.1:8000/api/cards").then((data) => {
