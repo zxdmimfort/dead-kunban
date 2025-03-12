@@ -10,9 +10,9 @@ class HistoryRecord(BaseModel):
 class KanbanCard(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int | None = None
     title: str | None = None
     description: str | None = None
+    room_id: int | None = 0
     status: str | None = None
     due_date: str | None = None
     priority: str | None = None
@@ -37,4 +37,14 @@ class User(BaseModel):
     token: str | None = None
     kanban: Kanban | None = None
     kanban_id: int | None = None
-    id: int | None = None
+
+
+class KanbanEnclosure(BaseModel):
+    model_config = ConfigDict(from_attributes=True, extra="ignore")
+    id: int
+
+
+class KanbanEnclosureForTG(BaseModel):
+    model_config = ConfigDict(from_attributes=True, extra="ignore")
+    room_id: int
+    telegram_chat_id: int | None = None

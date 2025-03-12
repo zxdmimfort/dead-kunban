@@ -9,9 +9,15 @@ class Base(DeclarativeBase):
 
 class KanbanCard(Base):
     __tablename__ = "kanban_cards"
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
     title: Mapped[str | None] = mapped_column(nullable=True)
     description: Mapped[str | None] = mapped_column(nullable=True)
+
+    room_id: Mapped[int | None] = mapped_column(ForeignKey("rooms.id"), nullable=True)
+    room: Mapped[Optional["KanbanEnclosure"]] = relationship(
+        "KanbanEnclosure", back_populates="kanban_cards"
+    )
+
     assignee_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id"), nullable=True
     )
@@ -36,7 +42,7 @@ class KanbanCard(Base):
 
 class HistoryRecord(Base):
     __tablename__ = "history_records"
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
     timestamp: Mapped[str] = mapped_column(nullable=False)
     status: Mapped[str | None] = mapped_column(nullable=True)
     card_id: Mapped[int] = mapped_column(ForeignKey("kanban_cards.id"))
@@ -47,11 +53,33 @@ class HistoryRecord(Base):
 
 class User(Base):
     __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    username: Mapped[str | None] = mapped_column(nullable=True)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    username: Mapped[str | None] = mapped_column(nullable=True, unique=True)
     password: Mapped[str | None] = mapped_column(nullable=True)
-    email: Mapped[str | None] = mapped_column(nullable=True)
+    email: Mapped[str | None] = mapped_column(nullable=True, unique=True)
     token: Mapped[str | None] = mapped_column(nullable=True)
     kanban_cards: Mapped[list["KanbanCard"]] = relationship(
         "KanbanCard", back_populates="assignee"
     )
+
+
+class KanbanEnclosure(Base):
+    __tablename__ = "rooms"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+
+    tgchat: Mapped["EnclosuresToTelegramChats"] = relationship(
+        back_populates="room", uselist=False
+    )
+    kanban_cards: Mapped[list["KanbanCard"]] = relationship(
+        "KanbanCard", back_populates="room"
+    )
+
+
+class EnclosuresToTelegramChats(Base):
+    __tablename__ = "tgchats"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    telegram_chat_id: Mapped[int | None] = mapped_column(nullable=True, unique=True)
+
+    room_id: Mapped[int] = mapped_column(ForeignKey("rooms.id"))
+
+    room: Mapped["KanbanEnclosure"] = relationship(back_populates="tgchat")

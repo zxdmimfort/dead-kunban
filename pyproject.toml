@@ -5,11 +5,17 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aiogram>=3.18.0",
     "alembic>=1.14.1",
     "fastapi[standard]>=0.115.8",
     "ipython>=8.32.0",
     "pytest>=8.3.4",
     "sqlalchemy>=2.0.38",
+    "aiohttp>=3.11.13",
+    "dotenv>=0.9.9",
+    "langchain-gigachat>=0.3.4",
+    "requests>=2.32.3",
+    "types-requests>=2.32.0.20250306",
 ]
 
 [dependency-groups]

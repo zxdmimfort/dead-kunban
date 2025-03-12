@@ -7,3 +7,4 @@
 **/start.bat
 **/node_modules
 **/*.db
+**/tg-frontend/gigachat_cridentials.py

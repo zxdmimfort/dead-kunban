@@ -23,3 +23,7 @@ locals_dict.update(
 )
 
 IPython.start_ipython(argv=[], user_ns=locals_dict)
+
+
+def create_all():
+    Base.metadata.create_all(engine)
