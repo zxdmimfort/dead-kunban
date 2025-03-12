@@ -20,9 +20,11 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder
 import re
 
 load_dotenv(dotenv_path="token.env")
-BOT_TOKEN: str = os.getenv("SECRET_KEY") or ""
-if not BOT_TOKEN:
-    raise ValueError("Missing SECRET_KEY")
+BOT_TOKEN: str = os.getenv("TG_KEY") or ""
+CREDENTIALS: str = os.getenv("GIGA_KEY") or ""
+
+if not BOT_TOKEN or not CREDENTIALS:
+    raise ValueError("Missing one of the secret keys")
 
 admins: tuple[str, ...] = ("aoi_dev", "mimfort")
 
@@ -192,7 +194,6 @@ async def main() -> None:
 
     @router.message(Command("dayof"))
     async def dayof(message: Message):
-        from gigachat_cridentials import CREDENTIALS
         from langchain_gigachat.chat_models import GigaChat
 
         model = GigaChat(
