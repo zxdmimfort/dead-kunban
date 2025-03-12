@@ -10,6 +10,11 @@ import IPython
 engine = get_engine()
 Session = get_session(engine)
 
+
+def create_all():
+    Base.metadata.create_all(engine)
+
+
 locals_dict = globals().copy()
 locals_dict.update(
     {
@@ -19,11 +24,8 @@ locals_dict.update(
         "KanbanCard": KanbanCard,
         "HistoryRecord": HistoryRecord,
         "User": User,
+        "create_all": create_all,
     }
 )
 
 IPython.start_ipython(argv=[], user_ns=locals_dict)
-
-
-def create_all():
-    Base.metadata.create_all(engine)

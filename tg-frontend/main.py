@@ -16,12 +16,12 @@ from aiogram.types.input_text_message_content import InputTextMessageContent
 
 from aiogram.types import KeyboardButton, ReplyKeyboardRemove, ReplyKeyboardMarkup
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
-
 import re
 
 load_dotenv(dotenv_path="token.env")
 BOT_TOKEN: str = os.getenv("TG_KEY") or ""
 CREDENTIALS: str = os.getenv("GIGA_KEY") or ""
+
 
 if not BOT_TOKEN or not CREDENTIALS:
     raise ValueError("Missing one of the secret keys")
@@ -42,17 +42,12 @@ statuses = ("todo", "inprogress", "done", "null", "string")
 
 
 def statuses_markup(mode=None, statuses=statuses) -> ReplyKeyboardMarkup:
-    # flexing on aiogram devs
-    class ElegantReplyKeyboardBuilder(ReplyKeyboardBuilder):
-        def __iadd__(self, other: KeyboardButton):
-            self.add(other)
-
-    builder = ElegantReplyKeyboardBuilder()
+    builder = ReplyKeyboardBuilder()
     for i in statuses:
         if mode == "tasks":
-            builder += KeyboardButton(text=f"/tasks {i}", callback_data=i)
+            builder.add(KeyboardButton(text=f"/tasks {i}", callback_data=i))
         else:
-            builder += KeyboardButton(text=i, callback_data=i)
+            builder.add(KeyboardButton(text=i, callback_data=i))
 
     builder.adjust(1)
     return builder.as_markup()
@@ -121,6 +116,7 @@ async def main() -> None:
         r = requests.post(
             url=f"http://127.0.0.1:8000/api/tgrooms/?telegram_chat_id={message.chat.id}"
         )
+
         await message.answer(text=r.text)
 
     @router.message(Command("greet"))
