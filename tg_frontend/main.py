@@ -1,77 +1,39 @@
 import asyncio
 import datetime
 from math import ceil
-from aiogram import Bot, Dispatcher, F, Router
+from aiogram import Dispatcher, F, Router
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 from typing import Callable, Awaitable
-import os
-from dotenv import load_dotenv
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
+
 import requests  # type: ignore
-from aiogram.types.inline_query import InlineQuery
-from aiogram.types.inline_query_result_article import InlineQueryResultArticle
-from aiogram.types.input_text_message_content import InputTextMessageContent
 
-from aiogram.types import KeyboardButton, ReplyKeyboardRemove, ReplyKeyboardMarkup
-from aiogram.utils.keyboard import ReplyKeyboardBuilder
+from aiogram.types import ReplyKeyboardRemove
 import re
+from add_task import router as add_task_router
+from task_actions import router as task_actions_router
 
-load_dotenv(dotenv_path="token.env")
-BOT_TOKEN: str = os.getenv("TG_KEY") or ""
-CREDENTIALS: str = os.getenv("GIGA_KEY") or ""
+from init import bot, API_HOST, statuses, CREDENTIALS
+from markups import statuses_markup, mainmenu_markup
+from crud_ops import delete_task_by_id, retrieve_room_id
 
-
-if not BOT_TOKEN or not CREDENTIALS:
-    raise ValueError("Missing one of the secret keys")
 
 admins: tuple[str, ...] = ("aoi_dev", "mimfort")
-
-
-class TaskForm(StatesGroup):
-    title_description = State()
-    schedule_period = State()
-    initial_status = State()
-
-
 reminder_cooldown: dict[int, int] = {}
 
 
-statuses = ("todo", "inprogress", "done", "null", "string")
-
-
-def statuses_markup(mode=None, statuses=statuses) -> ReplyKeyboardMarkup:
-    builder = ReplyKeyboardBuilder()
-    for i in statuses:
-        if mode == "tasks":
-            builder.add(KeyboardButton(text=f"/tasks {i}", callback_data=i))
-        else:
-            builder.add(KeyboardButton(text=i, callback_data=i))
-
-    builder.adjust(1)
-    return builder.as_markup()
-
-
-def mainmenu_markup(menupositions):
-    builder = ReplyKeyboardBuilder()
-    for i in menupositions:
-        builder.add(KeyboardButton(text=f"/{i}", callback_data=i))
-    builder.adjust(3)
-    return builder.as_markup()
-
-
 async def main() -> None:
-    bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
     router = dp.include_router(Router())
+    dp.include_router(add_task_router)
+    dp.include_router(task_actions_router)
 
     async def run_at(target_time, async_func, *args):
         now = datetime.datetime.now()
         delay = (target_time - now).total_seconds()
 
         if delay < 0:
-            raise Exception("Чюююваккк. Запланировал на прошлое ЧЗХ??")
+            raise Exception("Чюююваккк. Как ты запланировал на прошлое ЧЗХ??")
 
         await asyncio.sleep(delay)
         return await async_func(*args)
@@ -107,17 +69,13 @@ async def main() -> None:
 
     @router.message(Command("start"))
     async def start(message: Message):
+        await message.answer(text=str(message.chat.id))
         await message.answer(
             text="Охаё! 🖖",
             reply_markup=mainmenu_markup(
                 ["greet", "tasks", "addtask", "deltask", "dayof", "togglereminder"]
             ),
         )
-        r = requests.post(
-            url=f"http://127.0.0.1:8000/api/tgrooms/?telegram_chat_id={message.chat.id}"
-        )
-
-        await message.answer(text=r.text)
 
     @router.message(Command("greet"))
     async def greet(message: Message):
@@ -133,25 +91,11 @@ async def main() -> None:
 
         await task
 
-    def get_room_id(chat_id: int) -> int:  # type: ignore
-        r = requests.get(
-            url="http://127.0.0.1:8000/api/tgrooms/",
-            headers={"accept": "application/json"},
-        )
-
-        def room_for_current_tgchat(room):
-            return room["tgchat"]["telegram_chat_id"] == chat_id
-
-        rooms = list(
-            room["id"] for room in r.json() if room and room_for_current_tgchat(room)
-        )
-        return int(rooms[0])
-
     @router.message(Command("tasks"))
     async def tasks(message: Message):
         # await message.answer(text=str(get_room_id(message.chat.id)))
         r = requests.get(
-            url=f"http://127.0.0.1:8000/api/cards_for_specific_room/{get_room_id(message.chat.id)}",
+            url=f"http://{API_HOST}/api/cards_for_specific_room/{retrieve_room_id(message.chat.id)}",
             headers={"accept": "application/json"},
         )
         cards = r.json()["cards"]
@@ -238,88 +182,9 @@ async def main() -> None:
         res = re.findall(pattern=r"^(?:/deltask)\s+(\d+)$", string=message.text)
 
         if bool(res):
-            requests.delete(url=f"http://127.0.0.1:8000/api/cards/{int(res[0])}")
-            await message.answer(f"{int(res[0])} убит")
+            await message.answer(f"{delete_task_by_id(int(res[0]))} убит")
         else:
             await message.answer("неправильный формат")
-
-    @router.message(Command("addtask"))
-    async def create_task(message: Message, state: FSMContext):
-        await message.answer("Название задания:")
-        await state.set_state(TaskForm.title_description)
-
-        @router.message(TaskForm.title_description)
-        async def task_title(message: Message, state: FSMContext):
-            await state.update_data(title_description=message.text)
-            await message.answer("Период оборота задания(-1 если единожды):")
-            await state.set_state(TaskForm.schedule_period)
-
-            @router.message(TaskForm.schedule_period)
-            async def task_schedule(message: Message, state: FSMContext):
-                await message.answer("Начальный статус", reply_markup=statuses_markup())
-                await state.update_data(schedule_period=int(message.text))
-                await state.set_state(TaskForm.initial_status)
-
-                @router.message(TaskForm.initial_status)
-                async def task_status(message: Message, state: FSMContext):
-                    await state.update_data(initial_status=message.text)
-
-                    await message.answer(
-                        "Выслушал тебя, дорогой", reply_markup=ReplyKeyboardRemove()
-                    )
-                    data = await state.get_data()
-                    print(data)
-
-                    requests.post(
-                        url="http://127.0.0.1:8000/api/cards",
-                        headers={"accept": "application/json"},
-                        json={
-                            "title": data["title_description"].split("\n")[0],
-                            "description": data["title_description"].split("\n")[1]
-                            if "\n" in data["title_description"]
-                            else "",
-                            "room_id": get_room_id(message.chat.id),
-                            "status": data["initial_status"],
-                            "due_date": "string",
-                            "priority": "string",
-                            "created_at": "string",
-                            "period": data["schedule_period"],
-                            "history_records": [],
-                            "cooldown": "",
-                            "history_as_string": "",
-                            "days_till_todo": -1,
-                            "hours_till_todo": -1,
-                        },
-                    )
-
-                    await state.clear()
-
-    import aiohttp
-
-    @router.inline_query()
-    async def handle_inline_query(inline_query: InlineQuery):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
-                "http://127.0.0.1:8000/api/cards",
-                headers={"accept": "application/json"},
-            ) as response:
-                kanban = await response.json()
-
-        cards = kanban.get("cards", [])
-
-        results = [
-            InlineQueryResultArticle(
-                id=str(card_id),
-                title=card["title"],
-                description=card["description"],
-                input_message_content=InputTextMessageContent(message_text=str(card)),
-            )
-            for card_id, card in enumerate(cards)
-        ]
-
-        await bot.answer_inline_query(
-            inline_query_id=inline_query.id, results=results, cache_time=1
-        )
 
     def register_callback(
         action: str, handler: Callable[[CallbackQuery], Awaitable[None]]

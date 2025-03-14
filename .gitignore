@@ -7,4 +7,4 @@
 **/start.bat
 **/node_modules
 **/*.db
-**/tg-frontend/token.env
+**/tg_frontend/token.env

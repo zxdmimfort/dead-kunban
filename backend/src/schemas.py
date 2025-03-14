@@ -25,6 +25,14 @@ class KanbanCard(BaseModel):
     hours_till_todo: int | None = Field(default=-1)
 
 
+class KanbanCardRequest(KanbanCard):
+    pass
+
+
+class KanbanCardResponse(KanbanCard):
+    id: int | None
+
+
 class Kanban(BaseModel):
     columns: list | None = None
     cards: list[KanbanCard] | None = []

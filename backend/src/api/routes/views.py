@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import select
+from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.orm import selectinload
 
 from src import schemas  # изменён импорт
@@ -16,7 +17,9 @@ engine = get_engine()
 kanban_router = APIRouter()
 
 
-@kanban_router.get("/api/cards", response_model=dict[str, list[schemas.KanbanCard]])
+@kanban_router.get(
+    "/api/cards", response_model=dict[str, list[schemas.KanbanCardResponse]]
+)
 def get_cards():
     Session = get_session(engine)
     with Session() as session:
@@ -25,23 +28,38 @@ def get_cards():
         ).all()
     # Сериализуем объекты через schemas.KanbanCard
     serialized_cards = [
-        schemas.KanbanCard.model_validate(card).model_dump() for card in cards
+        schemas.KanbanCardResponse.model_validate(card).model_dump() for card in cards
     ]
     return {"cards": serialized_cards}
 
 
-@kanban_router.post("/api/cards", response_model=schemas.KanbanCard)
-def add_card(card: schemas.KanbanCard):
+@kanban_router.get("/api/cards/{card_id}", response_model=schemas.KanbanCardResponse)
+def get_card_by_id(card_id: int):
+    Session = get_session(engine)
+    with Session() as session:
+        try:
+            card = session.scalars(
+                select(KanbanCard)
+                .options(selectinload(KanbanCard.history_records))
+                .where(KanbanCard.id == card_id)
+            ).one()
+            return schemas.KanbanCardResponse.model_validate(card).model_dump()
+        except NoResultFound:
+            return None
+
+
+@kanban_router.post("/api/cards", response_model=schemas.KanbanCardResponse)
+def add_card(card: schemas.KanbanCardRequest):
     Session = get_session(engine)
     with Session() as session:
         new_card = KanbanCard(**card.model_dump(exclude_unset=True))
         session.add(new_card)
         session.commit()
         session.refresh(new_card)
-        return schemas.KanbanCard.model_validate(new_card)
+        return schemas.KanbanCardResponse.model_validate(new_card)
 
 
-@kanban_router.delete("/api/cards/{card_id}", response_model=schemas.KanbanCard)
+@kanban_router.delete("/api/cards/{card_id}", response_model=schemas.KanbanCardResponse)
 def delete_card(card_id: int):
     Session = get_session(engine)
     with Session() as session:
@@ -50,11 +68,11 @@ def delete_card(card_id: int):
             raise HTTPException(status_code=404, detail="Card not found")
         session.delete(card)
         session.commit()
-        return schemas.KanbanCard.model_validate(card)
+        return schemas.KanbanCardResponse.model_validate(card)
 
 
-@kanban_router.put("/api/cards/{card_id}", response_model=schemas.KanbanCard)
-def update_card(card_id: int, card_update: schemas.KanbanCard):
+@kanban_router.put("/api/cards/{card_id}", response_model=schemas.KanbanCardResponse)
+def update_card(card_id: int, card_update: schemas.KanbanCardRequest):
     Session = get_session(engine)
     with Session() as session:
         card = session.get(KanbanCard, card_id)
@@ -65,7 +83,7 @@ def update_card(card_id: int, card_update: schemas.KanbanCard):
             setattr(card, key, value)
         session.commit()
         session.refresh(card)
-        return schemas.KanbanCard.model_validate(card)
+        return schemas.KanbanCardResponse.model_validate(card)
 
 
 @kanban_router.get(
@@ -109,20 +127,39 @@ def delete_room(room_id: int):
         return schemas.KanbanCard.model_validate(room)
 
 
-@kanban_router.get("/api/tgrooms/")
-def get_tg_rooms():
+# @kanban_router.get("/api/tgrooms/")
+# def get_tg_rooms():
+#     Session = get_session(engine)
+#     with Session() as session:
+#         tgrooms = session.scalars(
+#             select(KanbanEnclosure).options(selectinload(KanbanEnclosure.tgchat))
+#         ).all()
+
+#         serialized_tgrooms = [room for room in tgrooms]
+#         print(serialized_tgrooms)
+#         return serialized_tgrooms
+
+
+@kanban_router.get("/api/tgroom/", response_model=schemas.KanbanEnclosureForTG)
+def get_tg_rooms(telegram_chat_id: int):
     Session = get_session(engine)
     with Session() as session:
-        tgrooms = session.scalars(
-            select(KanbanEnclosure).options(selectinload(KanbanEnclosure.tgchat))
-        ).all()
+        try:
+            tgroom = session.scalars(
+                select(EnclosuresToTelegramChats).filter_by(
+                    telegram_chat_id=telegram_chat_id
+                )
+            ).one()
 
-        serialized_tgrooms = [room for room in tgrooms]
-        print(serialized_tgrooms)
-        return serialized_tgrooms
+            return schemas.KanbanEnclosureForTG.model_validate(tgroom)
+        except NoResultFound:
+            print("No room found")
+            return add_tg_room(telegram_chat_id)
+        except MultipleResultsFound:
+            print("Multiple rooms found")
 
 
-@kanban_router.post("/api/tgrooms/", response_model=schemas.KanbanEnclosureForTG)
+@kanban_router.post("/api/tgroom/", response_model=schemas.KanbanEnclosureForTG)
 def add_tg_room(telegram_chat_id: int):
     Session = get_session(engine)
     with Session() as session:
@@ -143,13 +180,14 @@ def add_tg_room(telegram_chat_id: int):
 
 @kanban_router.get(
     "/api/cards_for_specific_room/{room_id}",
-    response_model=dict[str, list[schemas.KanbanCard]],
+    response_model=dict[str, list[schemas.KanbanCardResponse]],
 )
 def cards_for_specific_room(room_id: int):
     Session = get_session(engine)
     with Session() as session:
         cards = session.scalars(select(KanbanCard).filter_by(room_id=room_id)).all()
         serialized_cards = [
-            schemas.KanbanCard.model_validate(card).model_dump() for card in cards
+            schemas.KanbanCardResponse.model_validate(card).model_dump()
+            for card in cards
         ]
         return {"cards": serialized_cards}
