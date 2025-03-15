@@ -5,6 +5,7 @@ class HistoryRecord(BaseModel):
     model_config = ConfigDict(from_attributes=True, extra="ignore")
     timestamp: str
     status: str | None = None
+    previous_status: str | None = None
 
 
 class KanbanCard(BaseModel):
@@ -18,7 +19,6 @@ class KanbanCard(BaseModel):
     priority: str | None = None
     created_at: str | None = None
     period: int = Field(default=-1)
-    history_records: list[HistoryRecord] | None = []
     cooldown: str | None = Field(default="")
     history_as_string: str | None = Field(default="")
     days_till_todo: int | None = Field(default=-1)
@@ -31,6 +31,7 @@ class KanbanCardRequest(KanbanCard):
 
 class KanbanCardResponse(KanbanCard):
     id: int | None
+    history_records: list[HistoryRecord] | None = []
 
 
 class Kanban(BaseModel):
@@ -56,3 +57,6 @@ class KanbanEnclosureForTG(BaseModel):
     model_config = ConfigDict(from_attributes=True, extra="ignore")
     room_id: int
     telegram_chat_id: int | None = None
+    notify: bool
+    preferred_notification_time: str
+    preffered_notification_strftime: str = "%H:%M:%S"

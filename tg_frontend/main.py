@@ -1,10 +1,10 @@
 import asyncio
 import datetime
+from datetime import datetime as dt
 from math import ceil
-from aiogram import Dispatcher, F, Router
+from aiogram import Dispatcher, Router
 from aiogram.filters import Command
-from aiogram.types import Message, CallbackQuery
-from typing import Callable, Awaitable
+from aiogram.types import Message
 
 import requests  # type: ignore
 
@@ -15,11 +15,9 @@ from task_actions import router as task_actions_router
 
 from init import bot, API_HOST, statuses, CREDENTIALS
 from markups import statuses_markup, mainmenu_markup
-from crud_ops import delete_task_by_id, retrieve_room_id
-
+import crud_ops
 
 admins: tuple[str, ...] = ("aoi_dev", "mimfort")
-reminder_cooldown: dict[int, int] = {}
 
 
 async def main() -> None:
@@ -29,7 +27,7 @@ async def main() -> None:
     dp.include_router(task_actions_router)
 
     async def run_at(target_time, async_func, *args):
-        now = datetime.datetime.now()
+        now = dt.now()
         delay = (target_time - now).total_seconds()
 
         if delay < 0:
@@ -38,34 +36,95 @@ async def main() -> None:
         await asyncio.sleep(delay)
         return await async_func(*args)
 
+    async def run_at_with_countdown(sleep_time, target_time, async_func, *args):
+        while True:
+            now = dt.now()
+            delay = (target_time - now).total_seconds()
+            if delay < 0:
+                raise Exception("Чюююваккк. Как ты запланировал на прошлое ЧЗХ??")
+            yield f"До напоминалки: {delay / 3600} часов {delay % 3600 / 60} минут {delay % 3600 % 60} секунд"
+            if delay <= 1:
+                break
+            await asyncio.sleep(sleep_time)
+        await async_func(*args)
+
+    async def notify(chat_id):
+        tasks_for_notification = crud_ops.tasks_for_notification(chat_id)
+        if tasks_for_notification:
+            await bot.send_message(chat_id=chat_id, text=str(tasks_for_notification))
+        else:
+            await bot.send_message(chat_id=chat_id, text=str("На сегодня дел нет!"))
+
+    @router.message(Command("notify"))
+    async def notify_now(message: Message):
+        await message.answer(f"{message.chat.id}")
+        await notify(message.chat.id)
+
     async def reminder(chat_id):
-        while chat_id in reminder_cooldown:
-            today = datetime.datetime.now()
+        r = crud_ops.get_telegram_room(chat_id)
+        preffered_notification_time = r["preferred_notification_time"]
 
-            today = today.replace(hour=23, minute=29, second=0)
-
-            await run_at(
-                today + datetime.timedelta(days=reminder_cooldown[chat_id]),
-                lambda: bot.send_message(
-                    chat_id=chat_id, text="Daily report: All systems normal"
-                ),
+        while crud_ops.must_notify(chat_id):
+            await bot.send_message(
+                chat_id=chat_id, text=str(crud_ops.must_notify(chat_id))
             )
+
+            customdate = dt.today().date()
+            customtime = dt.strptime(preffered_notification_time, "%H:%M:%S").time()
+            dateplustime = dt.combine(customdate, customtime)
+            add = (
+                datetime.timedelta(days=1)
+                if (dateplustime - dt.now()).total_seconds() < 0
+                else datetime.timedelta(days=0)
+            )
+
+            async for countdown in run_at_with_countdown(
+                sleep_time=30,
+                target_time=dateplustime + add,
+                async_func=lambda: notify(chat_id),
+            ):
+                await bot.send_message(chat_id=chat_id, text=countdown)
+                preffered_notification_time = r["preferred_notification_time"]
+                new_notification_time = r["preferred_notification_time"]
+
+                if new_notification_time != preffered_notification_time:
+                    break
+                    # if crud_ops.must_notify(chat_id):
+
+    @router.message(Command("set_preferred_notification_time"))
+    async def set_preferred_notification_time(message: Message):
+        regex = re.match(  # type: ignore
+            pattern=r"/set_preferred_notification_time\s+(?P<notification_time>\d\d\:\d\d\:\d\d)",
+            string=message.text,
+        )
+        if regex is None:
+            return
+        new_notification_time = regex.group("notification_time")
+        old_notification_time = crud_ops.get_telegram_room(message.chat.id)[
+            "preferred_notification_time"
+        ]
+        requests.put(
+            url=f"http://{API_HOST}/api/set_preferred_notification_time?telegram_chat_id={message.chat.id}&preferred_notification_time={new_notification_time}"
+        )
+        await message.answer(text=f"{old_notification_time} -> {new_notification_time}")
 
     @router.message(Command("togglereminder"))
     async def toggle_remind(message: Message):
-        res = re.findall(
-            pattern=r"^(?:/togglereminder)\s+(\d{1,10})$", string=message.text
+        notify = crud_ops.get_telegram_room(message.chat.id)["notify"]
+        preferred_notification_time = crud_ops.get_telegram_room(message.chat.id)[
+            "preferred_notification_time"
+        ]
+        crud_ops.put_room_notifications(
+            telegram_chat_id=int(message.chat.id), turned_on=not notify
         )
-        if message.chat.id in reminder_cooldown.keys():
-            reminder_cooldown.pop(message.chat.id)
+        notify = not notify
+        if not notify:
             await message.answer("напоминалка убит")
         else:
-            if bool(res):
-                reminder_cooldown[message.chat.id] = int(res[0])
-                await message.answer(f"установлена напоминалка каждые {res[0]} дней")
-                asyncio.create_task(reminder(message.chat.id))
-            else:
-                await message.answer("неправильный формат")
+            await message.answer(
+                f"установлена напоминалка на {preferred_notification_time}"
+            )
+            await reminder(message.chat.id)
 
     @router.message(Command("start"))
     async def start(message: Message):
@@ -73,40 +132,25 @@ async def main() -> None:
         await message.answer(
             text="Охаё! 🖖",
             reply_markup=mainmenu_markup(
-                ["greet", "tasks", "addtask", "deltask", "dayof", "togglereminder"]
+                ["tasks", "addtask", "edit", "dayof", "togglereminder"]
             ),
         )
-
-    @router.message(Command("greet"))
-    async def greet(message: Message):
-        await message.answer("Если ты не гамасек, скажи приветик за 5 сек")
-        var = datetime.datetime.now() + datetime.timedelta(seconds=5)
-        await message.answer(f"приффетик в {var}")
-        task = asyncio.create_task(
-            run_at(
-                var,
-                lambda: bot.send_message(chat_id=message.chat.id, text="ПРИФФЕТИК 👋"),
-            )
-        )
-
-        await task
 
     @router.message(Command("tasks"))
     async def tasks(message: Message):
         # await message.answer(text=str(get_room_id(message.chat.id)))
-        r = requests.get(
-            url=f"http://{API_HOST}/api/cards_for_specific_room/{retrieve_room_id(message.chat.id)}",
+        tasks = requests.get(
+            url=f"http://{API_HOST}/api/cards_for_specific_room?room_id={crud_ops.retrieve_room_id(message.chat.id)}",
             headers={"accept": "application/json"},
-        )
-        cards = r.json()["cards"]
+        ).json()["cards"]
 
-        await message.answer(text=str(cards))
+        await message.answer(text=str(tasks))
 
         def gen_message(status: str):
             filtered_tasks_string = ",\n".join(
                 map(
                     lambda x: f"{x['id']}: {x['title']}",
-                    filter(lambda k: k["status"] == status, cards),
+                    filter(lambda k: k["status"] == status, tasks),
                 )
             )
 
@@ -120,7 +164,7 @@ async def main() -> None:
             )
         else:
             if message.text == "/tasks all":
-                await message.answer(str(cards))
+                await message.answer(str(tasks))
             else:
                 for i in statuses:
                     if message.text == f"/tasks {i}":
@@ -145,10 +189,10 @@ async def main() -> None:
 
         from langchain_core.messages import HumanMessage, SystemMessage
 
-        day = datetime.datetime.now().day
-        iso_week = datetime.datetime.now().isocalendar().week
+        day = dt.now().day
+        iso_week = dt.now().isocalendar().week
         week = ceil(day / 7)
-        month = datetime.datetime.now().month
+        month = dt.now().month
 
         months = [
             "",
@@ -177,25 +221,14 @@ async def main() -> None:
         output = model.invoke(messages)
         await message.answer(str(output.content))
 
-    @router.message(Command("deltask"))
-    async def delete_task(message: Message):
-        res = re.findall(pattern=r"^(?:/deltask)\s+(\d+)$", string=message.text)
+    # @router.message(Command("deltask"))
+    # async def delete_task(message: Message):
+    #     res = re.findall(pattern=r"^(?:/deltask)\s+(\d+)$", string=message.text)
 
-        if bool(res):
-            await message.answer(f"{delete_task_by_id(int(res[0]))} убит")
-        else:
-            await message.answer("неправильный формат")
-
-    def register_callback(
-        action: str, handler: Callable[[CallbackQuery], Awaitable[None]]
-    ) -> None:
-        async def wrapper(query: CallbackQuery) -> None:
-            print(f"Handling action: {action}")
-            await handler(query)
-
-        router.callback_query.register(wrapper, F.data == action)
-
-    # register_callback("register", lambda q: send_register(q.message))
+    #     if bool(res):
+    #         await message.answer(f"{crud_ops.delete_task_by_id(int(res[0]))} убит")
+    #     else:
+    #         await message.answer("неправильный формат")
 
     await dp.start_polling(bot)
 

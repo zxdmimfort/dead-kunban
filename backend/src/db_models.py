@@ -45,6 +45,7 @@ class HistoryRecord(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
     timestamp: Mapped[str] = mapped_column(nullable=False)
     status: Mapped[str | None] = mapped_column(nullable=True)
+    previous_status: Mapped[str | None] = mapped_column(nullable=True)
     card_id: Mapped[int] = mapped_column(ForeignKey("kanban_cards.id"))
     card: Mapped["KanbanCard"] = relationship(
         "KanbanCard", back_populates="history_records"
@@ -68,7 +69,7 @@ class KanbanEnclosure(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
 
     tgchat: Mapped["EnclosuresToTelegramChats"] = relationship(
-        back_populates="room", uselist=False
+        back_populates="room", uselist=False, cascade="all, delete-orphan"
     )
     kanban_cards: Mapped[list["KanbanCard"]] = relationship(
         "KanbanCard", back_populates="room"
@@ -78,8 +79,8 @@ class KanbanEnclosure(Base):
 class EnclosuresToTelegramChats(Base):
     __tablename__ = "tgchats"
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    telegram_chat_id: Mapped[int | None] = mapped_column(nullable=True, unique=True)
-
+    telegram_chat_id: Mapped[int | None] = mapped_column(unique=True)
+    notify: Mapped[bool] = mapped_column()
+    preferred_notification_time: Mapped[str] = mapped_column()
     room_id: Mapped[int] = mapped_column(ForeignKey("rooms.id"))
-
     room: Mapped["KanbanEnclosure"] = relationship(back_populates="tgchat")
