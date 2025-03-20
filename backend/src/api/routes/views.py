@@ -11,6 +11,7 @@ from src.db_models import (
     HistoryRecord,
     KanbanCard,
     KanbanEnclosure,
+    NotificationTime,
 )  # импортируем модель из БД
 from src.config import get_engine, get_session  # изменение подключения к БД
 
@@ -34,14 +35,30 @@ def room_notifications(room_id: int):
         ).all()
         ready = []
         for card in cards:
-            if card.status == "done":
+            if card.status == "done" and card.period != -1:
                 last_status_date = dt.fromisoformat(card.history_records[-1].timestamp)
-                projected_date = last_status_date + timedelta(minutes=card.period)
+                projected_date = last_status_date + timedelta(days=card.period)
                 if dt.now() >= projected_date:
+                    status_todo = "todo"
+                    new_history_record = HistoryRecord(
+                        card_id=card.id,
+                        timestamp=dt.now().isoformat(),
+                        status=status_todo,
+                        previous_status=card.status,
+                    )
+                    setattr(
+                        card,
+                        "history_records",
+                        [*card.history_records, new_history_record],
+                    )
+                    card.status = status_todo
                     ready.append(card)
 
             if card.status == "todo":
                 ready.append(card)
+
+            session.commit()
+            session.refresh(card)
 
         serialized_cards = [
             schemas.KanbanCardResponse.model_validate(card).model_dump()
@@ -142,7 +159,6 @@ def update_card(card_id: int, card_update: schemas.KanbanCardRequest):
 
         for key, value in update_data.items():
             setattr(card, key, value)
-
         session.commit()
         session.refresh(card)
         return schemas.KanbanCardResponse.model_validate(card)
@@ -187,15 +203,17 @@ def delete_room(room_id: int):
         return schemas.KanbanCard.model_validate(room)
 
 
-@kanban_router.get("/api/tgroom/", response_model=schemas.KanbanEnclosureForTG)
+@kanban_router.get("/api/tgroom", response_model=schemas.KanbanEnclosureForTG)
 def get_tg_rooms(telegram_chat_id: int):
     Session = get_session(engine)
     with Session() as session:
         try:
             tgroom = session.scalars(
-                select(EnclosuresToTelegramChats).filter_by(
-                    telegram_chat_id=telegram_chat_id
+                select(EnclosuresToTelegramChats)
+                .options(
+                    selectinload(EnclosuresToTelegramChats.preferred_notification_times)
                 )
+                .filter_by(telegram_chat_id=telegram_chat_id)
             ).one()
 
             return schemas.KanbanEnclosureForTG.model_validate(tgroom)
@@ -218,9 +236,14 @@ def add_tg_room(telegram_chat_id: int):
             telegram_chat_id=telegram_chat_id,
             room_id=new_room.id,
             notify=False,
-            preferred_notification_time="08:00:00",
         )
+
+        default_notification_time = NotificationTime(
+            time="08:00:00", tgchat_id=new_tg_chat.id
+        )
+        new_tg_chat.preferred_notification_times.append(default_notification_time)
         session.add(new_tg_chat)
+
         session.commit()
 
         session.refresh(new_tg_chat)
@@ -267,21 +290,24 @@ def update_notify_flag(telegram_chat_id: int, notify: bool):
     "/api/set_preferred_notification_time", response_model=schemas.KanbanEnclosureForTG
 )
 def set_preferred_notification_time(
-    telegram_chat_id: int, preferred_notification_time: str
+    telegram_chat_id: int, preferred_notification_times: list[schemas.NotificationTime]
 ):
     Session = get_session(engine)
     with Session() as session:
-        card_update = session.scalars(
+        tgchat = session.scalars(
             select(EnclosuresToTelegramChats).where(
                 EnclosuresToTelegramChats.telegram_chat_id == telegram_chat_id
             )
         ).one()
 
-        if card_update is None:
+        if tgchat is None:
             raise HTTPException(status_code=404, detail="Card not found")
-
-        card_update.preferred_notification_time = preferred_notification_time
+        tgchat.preferred_notification_times = []
+        for time in preferred_notification_times:
+            tgchat.preferred_notification_times.append(
+                NotificationTime(tgchat_id=tgchat.id, time=time.time)
+            )
 
         session.commit()
-        session.refresh(card_update)
-        return schemas.KanbanEnclosureForTG.model_validate(card_update)
+        session.refresh(tgchat)
+        return schemas.KanbanEnclosureForTG.model_validate(tgchat)

@@ -76,11 +76,22 @@ class KanbanEnclosure(Base):
     )
 
 
+class NotificationTime(Base):
+    __tablename__ = "notification_times"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+    time: Mapped[str] = mapped_column()
+    tgchat_id: Mapped[str] = mapped_column(ForeignKey("tgchats.id"))
+
+
 class EnclosuresToTelegramChats(Base):
     __tablename__ = "tgchats"
     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
     telegram_chat_id: Mapped[int | None] = mapped_column(unique=True)
     notify: Mapped[bool] = mapped_column()
-    preferred_notification_time: Mapped[str] = mapped_column()
+
+    preferred_notification_times: Mapped[list["NotificationTime"]] = relationship(
+        cascade="all, delete-orphan"
+    )
+
     room_id: Mapped[int] = mapped_column(ForeignKey("rooms.id"))
     room: Mapped["KanbanEnclosure"] = relationship(back_populates="tgchat")

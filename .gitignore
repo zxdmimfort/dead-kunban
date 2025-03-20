@@ -8,3 +8,5 @@
 **/node_modules
 **/*.db
 **/tg_frontend/token.env
+**/tg_frontend/reminder_chat_ids.json
+**/tg_frontend/user_chat_ids.json

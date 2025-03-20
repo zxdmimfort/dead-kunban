@@ -1,4 +1,7 @@
-from pydantic import BaseModel, ConfigDict, Field
+import datetime
+import json
+from pydantic import BaseModel, ConfigDict, Field, computed_field
+from datetime import datetime as dt
 
 
 class HistoryRecord(BaseModel):
@@ -19,10 +22,6 @@ class KanbanCard(BaseModel):
     priority: str | None = None
     created_at: str | None = None
     period: int = Field(default=-1)
-    cooldown: str | None = Field(default="")
-    history_as_string: str | None = Field(default="")
-    days_till_todo: int | None = Field(default=-1)
-    hours_till_todo: int | None = Field(default=-1)
 
 
 class KanbanCardRequest(KanbanCard):
@@ -30,8 +29,55 @@ class KanbanCardRequest(KanbanCard):
 
 
 class KanbanCardResponse(KanbanCard):
+    @computed_field
+    def till_todo(self) -> str:
+        if self.status == "done" and self.period != -1:
+            last_status_date = dt.fromisoformat(self.history_records[-1].timestamp)
+            projected_date = last_status_date + datetime.timedelta(days=self.period)
+            td = projected_date - dt.now()
+            serialized_td = {
+                "days": td.days,
+                "seconds": td.seconds,
+                "microseconds": td.microseconds,
+                "total_seconds": td.total_seconds(),
+            }
+            return json.dumps(serialized_td)
+        return ""
+
+    history_records: list[HistoryRecord] = []
+
+    @computed_field
+    def beautiful_history(self) -> str:
+        formatted_times = [
+            dt.fromisoformat(record.timestamp).strftime("%d-%m-%y %H:%M:%S")
+            for record in self.history_records
+        ]
+        return "\n".join(
+            [
+                f"{record.previous_status} -> {record.status};(at {formatted})"
+                for record, formatted in zip(self.history_records, formatted_times)
+            ]
+        )
+
+    @computed_field
+    def beautiful_card(self) -> str:
+        summary = []
+        for field_name, field_info in self.model_fields.items():
+            if field_name not in (
+                "history_records",
+                "id",
+                "room_id",
+                "due_date",
+                "priority",
+                "created_at",
+            ):
+                field_value = getattr(self, field_name)
+                formatted_name = field_name.replace("_", " ").title()
+                summary.append(f"{formatted_name}: {field_value}")
+        summary.append(f"history: {self.beautiful_history}")
+        return "\n".join(summary)
+
     id: int | None
-    history_records: list[HistoryRecord] | None = []
 
 
 class Kanban(BaseModel):
@@ -53,10 +99,15 @@ class KanbanEnclosure(BaseModel):
     id: int
 
 
-class KanbanEnclosureForTG(BaseModel):
+class NotificationTime(BaseModel):
+    model_config = ConfigDict(from_attributes=True, extra="ignore")
+    time: str
+
+
+class KanbanEnclosureForTG(BaseModel):  # response only
     model_config = ConfigDict(from_attributes=True, extra="ignore")
     room_id: int
-    telegram_chat_id: int | None = None
+    telegram_chat_id: int
     notify: bool
-    preferred_notification_time: str
-    preffered_notification_strftime: str = "%H:%M:%S"
+    preferred_notification_times: list[NotificationTime]
+    preferred_notification_strftime: str = "%H:%M:%S"

@@ -12,4 +12,4 @@ if not BOT_TOKEN or not CREDENTIALS:
 
 bot = Bot(token=BOT_TOKEN)
 
-statuses = ("todo", "inprogress", "done", "null", "string")
+statuses = ("todo", "done")
