@@ -1,6 +1,7 @@
 import asyncio
 from functools import wraps
 from init import bot
+from datetime import datetime as dt
 
 
 def times_format_func(times: list[dict[str, str]]) -> str:
@@ -84,3 +85,21 @@ def autoremove_markup(after_sec=10):
         return wrapper
 
     return decorator
+
+
+def format(days, hours, minutes, seconds):
+    return f"{days} дней {hours} часов {minutes} минут {seconds} секунд"
+
+
+async def run_at_with_countdown(sleep_time: float, target_time: dt, fmt=format):
+    while True:
+        now = dt.now()
+        left = target_time - now
+        delay = left.total_seconds()
+        days, hours, minutes, seconds = timedelta_converter(left.total_seconds())
+
+        yield format(days, hours, minutes, seconds)
+
+        if delay <= sleep_time:
+            break
+        await asyncio.sleep(sleep_time)

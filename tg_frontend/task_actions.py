@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.types import Message
@@ -13,10 +15,10 @@ import re
 import crud_ops
 from markups import just_markup, tasks_markup
 from registercallback import register_callback  # type: ignore
+from datetime import datetime as dt, timedelta
 
-
-from init import API_HOST
-from utils import autoremove_markup
+from init import API_HOST, bot
+import utils
 
 
 class TaskPutForm(StatesGroup):
@@ -29,11 +31,46 @@ router = Router()
 
 
 @router.message(Command("edit", "изменить"))
-@autoremove_markup(10)
 async def send_list(message: Message):
     chat_id = message.chat.id
     tasks = crud_ops.tasks_for_specific_chat(chat_id)
-    return await message.answer(text="Choose a task:", reply_markup=tasks_markup(tasks))
+
+    till_deletion = 10
+    target_time = dt.now() + timedelta(seconds=till_deletion)
+    sent_messages = []
+
+    def format(days, hours, minutes, seconds):
+        return f"{seconds} секунд"
+
+    async def countdown_task():
+        async for countdown in utils.run_at_with_countdown(
+            sleep_time=2.5, target_time=target_time, fmt=format
+        ):
+            sent_messages.append(
+                await bot.send_message(
+                    chat_id=chat_id, text=f"До удаления: {countdown}"
+                )
+            )
+            for i in sent_messages[:-1]:
+                if await utils.auto_remove_message(i):
+                    sent_messages.remove(i)
+
+        for i in sent_messages:
+            removed = await utils.auto_remove_message(i)
+            while not removed:
+                removed = await utils.auto_remove_message(i)
+            sent_messages.remove(i)
+
+    async def auto_remove_initial_message():
+        initial_message = await message.answer(
+            text=f"Выбери задачу (клавиатура исчезнет через {till_deletion} сек):",
+            reply_markup=tasks_markup(tasks),
+        )
+        await utils.auto_remove_message(initial_message, till_deletion)
+
+    countdown_task_handle = asyncio.create_task(countdown_task())
+    auto_remove_task_handle = asyncio.create_task(auto_remove_initial_message())
+    await asyncio.gather(countdown_task_handle, auto_remove_task_handle)
 
 
 @router.callback_query(F.data)
@@ -55,7 +92,7 @@ async def show_task(query: CallbackQuery, state: FSMContext):
     actions = ("Сделано!", "delete", "duplicate", "change status", "cancel")
 
     await query.message.answer(
-        text="Выбери действие: ",
+        text=f'''Выбери действие над "{task["title"]}": ''',
         reply_markup=just_markup(statuses=actions),
     )
     await state.set_state(TaskPutForm.action)

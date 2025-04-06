@@ -30,6 +30,20 @@ class KanbanCardRequest(KanbanCard):
 
 class KanbanCardResponse(KanbanCard):
     @computed_field
+    def being_late_by(self) -> str:
+        if self.status == "todo" and self.period != -1:
+            last_status_date = dt.fromisoformat(self.history_records[-1].timestamp)
+            td = dt.now() - last_status_date
+            serialized_td = {
+                "days": td.days,
+                "seconds": td.seconds,
+                "microseconds": td.microseconds,
+                "total_seconds": td.total_seconds(),
+            }
+            return json.dumps(serialized_td)
+        return ""
+
+    @computed_field
     def till_todo(self) -> str:
         if self.status == "done" and self.period != -1:
             last_status_date = dt.fromisoformat(self.history_records[-1].timestamp)
