@@ -1,6 +1,6 @@
 from typing import Any
 from fastapi import APIRouter, HTTPException
-from sqlalchemy import Sequence, select
+from sqlalchemy import select
 from sqlalchemy.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.orm import selectinload
 from datetime import datetime as dt, timedelta
@@ -28,7 +28,7 @@ kanban_router = APIRouter()
 def room_notifications(room_id: int):
     Session = get_session(engine)
     with Session() as session:
-        cards: Sequence[KanbanCard] = session.scalars(
+        cards = session.scalars(
             select(KanbanCard)
             .options(selectinload(KanbanCard.history_records))
             .filter_by(room_id=room_id)
@@ -53,8 +53,7 @@ def room_notifications(room_id: int):
                     )
                     card.status = status_todo
                     ready.append(card)
-
-            if card.status == "todo":
+            elif card.status == "todo":
                 ready.append(card)
 
             session.commit()
